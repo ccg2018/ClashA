@@ -1,0 +1,89 @@
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+
+def getCurrentFlavor() {
+    String task = getGradle().getStartParameter().getTaskRequests().toString()
+    Matcher matcher = Pattern.compile("(assemble|generate)\\w*(Release|Debug)").matcher(task)
+    if (matcher.find()) return matcher.group(2).toLowerCase() else {
+        println "Warning: No match found for $task"
+        return "debug"
+    }
+}
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.github.clasha.clasha"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
+        externalNativeBuild {
+            ndkBuild {
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
+                arguments "-j${Runtime.runtime.availableProcessors()}"
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation "android.arch.work:work-runtime-ktx:$workVersion"
+    implementation "androidx.browser:browser:$androidxVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    testImplementation "androidx.room:room-testing:$roomVersion"
+    testImplementation "junit:junit:$junitVersion"
+
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+
+    implementation 'eu.chainfire:libsuperuser:1.0.0.201704021214'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    androidTestImplementation "android.arch.work:work-testing:$workVersion"
+    androidTestImplementation "androidx.test:runner:$androidTestVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidEspressoVersion"
+
+    //XHY DEBUG START
+    debugImplementation 'com.github.whataa:pandora:v1.2.1'
+    releaseImplementation 'com.github.whataa:pandora-no-op:v1.2.0'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
+    implementation 'com.blankj:utilcode:1.22.0'
+    //XHY DEBUG END
+}
+
+ext.abiCodes = ['armeabi-v7a': 1, 'arm64-v8a': 2, x86: 3]
+if (getCurrentFlavor() == 'release') android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+        def offset = project.ext.abiCodes.get(output.getFilter(com.android.build.OutputFile.ABI))
+        if (offset != null) output.versionCodeOverride = variant.versionCode + offset
+    }
+}
