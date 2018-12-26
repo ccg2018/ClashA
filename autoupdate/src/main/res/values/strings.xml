@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="android_auto_update_dialog_title">Updates are available</string>
+
+    <string name="android_auto_update_notify_ticker">Updates are available,click and update</string>
+    <string name="android_auto_update_notify_content">Updates are available,click and update</string>
+
+    <string name="android_auto_update_download_progress">Downloading:%1$d%%</string>
+
+    <string name="android_auto_update_dialog_checking">Checking version</string>
+    <string name="android_auto_update_dialog_btn_download">Download now</string>
+    <string name="android_auto_update_toast_no_new_update">Already the latest version</string>
+    <string name="android_auto_update_dialog_btn_cancel">cancel</string>
+
+
+</resources>

@@ -1,3 +1,59 @@
 <resources>
     <string name="app_name">ClashA</string>
+
+    <string name="speed">%s/s</string>
+    <string name="stat_summary">Sent: \t\t\t\t\t%3$s\t↑\t%1$s\nReceived: \t%4$s\t↓\t%2$s</string>
+
+    <!-- APP -->
+    <string name="title_check_update">Check Update</string>
+    <string name="title_dashboard">Dashboard</string>
+
+
+    <string name="message_dashboard_please_startproxy">Please start proxy</string>
+
+    <!-- notification category -->
+    <string name="service_vpn">VPN Service</string>
+    <string name="service_proxy">Proxy Service</string>
+    <string name="service_transproxy">Transproxy Service</string>
+    <string name="forward_success">Shadowsocks started.</string>
+    <string name="invalid_server">Invalid server name</string>
+    <string name="service_failed">Failed to connect the remote server</string>
+    <string name="stop">Stop</string>
+    <string name="stopping">Shutting down…</string>
+    <string name="vpn_error">%s</string>
+    <string name="vpn_permission_denied">Permission denied to create a VPN service</string>
+    <string name="reboot_required">Failed to start VPN service. You might need to reboot your device.</string>
+    <string name="profile_invalid_input">No valid profile data found.</string>
+
+    <!-- config -->
+    <string name="download_config">Download Config.yml</string>
+    <string name="message_download_config_success">Download success</string>
+    <string name="message_download_config_fail">Download fail</string>
+    <string name="message_download_url_legal">Download url illegal</string>
+    <string name="message_download_config_progress">Config.yml is Downloading</string>
+    <string name="message_import_config_success">Import success</string>
+    <string name="message_import_config_fail">Import fail</string>
+    <string name="message_import_config_none">Import file is none</string>
+    <string name="message_import_config_file_format_illegal">Import file format is illegal</string>
+    <string name="message_read_config_port">socks-port is %s and external-controller is %s in config</string>
+
+    <!-- UI -->
+    <string name="settings">Settings</string>
+
+    <!-- permission-->
+    <string name="permission_rationale_message">You have rejected us to apply for authorization, please agree to
+        authorization, otherwise the function can\'t be used normally!
+    </string>
+    <string name="permission_denied_forever_message" translatable="false">We need some of the permissions you rejected
+        or the system failed to apply failed, please manually set to the page authorize, otherwise the function can\'t
+        be used normally!
+    </string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

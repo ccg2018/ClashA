@@ -1,10 +1,28 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
+def keystorePSW = ''
+def keystoreAlias = ''
+def keystoreAliasPSW = ''
+// default keystore file, PLZ config file path in local.properties
+def keyfile = file('s.keystore.temp')
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def keystoreFilepath = properties.getProperty("keystore.path")
+if (keystoreFilepath) {
+    keystorePSW = properties.getProperty("keystore.password")
+    keystoreAlias = properties.getProperty("keystore.alias")
+    keystoreAliasPSW = properties.getProperty("keystore.alias_password")
+    keyfile = file(keystoreFilepath)
+}
 
 def getCurrentFlavor() {
     String task = getGradle().getStartParameter().getTaskRequests().toString()
@@ -16,13 +34,14 @@ def getCurrentFlavor() {
 }
 
 android {
-    compileSdkVersion 28
+    buildToolsVersion rootProject.buildToolsVersion
+    compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
-        applicationId "com.github.clasha.clasha"
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        applicationId "com.github.ccg.clasha"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.sdkVersion
+        versionCode 7
+        versionName "0.0.1-pre6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -33,15 +52,33 @@ android {
 
         externalNativeBuild {
             ndkBuild {
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
                 arguments "-j${Runtime.runtime.availableProcessors()}"
             }
         }
     }
+    signingConfigs {
+        ccg {
+            //keystore中key的别名
+            keyAlias keystoreAlias
+            //keystore中key的密码
+            keyPassword keystorePSW
+            //keystore的文件路径，可以是绝对路径也可以是相对路径
+            storeFile keyfile
+            //keystore的密码
+            storePassword keystoreAliasPSW
+        }
+    }
+
     buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.ccg
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.ccg
         }
     }
 
@@ -50,21 +87,39 @@ android {
             path 'src/main/jni/Android.mk'
         }
     }
+    lintOptions.checkReleaseBuilds false
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            universalApk true
+        }
+    }
+    sourceSets.main.jniLibs.srcDirs +=
+            new File(project(':app').buildDir, "intermediates/bundles/${getCurrentFlavor()}/jni")
+    sourceSets.main.jniLibs.srcDirs += new File(project(':app').projectDir, "src/main/clash/bin")
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
+
+    implementation "androidx.appcompat:appcompat:$androidxVersion"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
     implementation "android.arch.work:work-runtime-ktx:$workVersion"
-    implementation "androidx.browser:browser:$androidxVersion"
+    implementation "androidx.browser:browser:1.0.0"
     implementation "androidx.room:room-runtime:$roomVersion"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     kapt "androidx.room:room-compiler:$roomVersion"
     testImplementation "androidx.room:room-testing:$roomVersion"
     testImplementation "junit:junit:$junitVersion"
 
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
 
     implementation 'eu.chainfire:libsuperuser:1.0.0.201704021214'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
@@ -72,18 +127,72 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidTestVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidEspressoVersion"
 
-    //XHY DEBUG START
+
+    implementation "androidx.core:core-ktx:1.0.1"
+    implementation "androidx.preference:preference:1.0.0"
+    implementation "com.google.android.material:material:1.1.0-alpha02"
+//    implementation "androidx.legacy:legacy-support-v4:$androidxVersion"
+
+
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.23'
+
+    implementation 'me.rosuh:AndroidFilePicker:0.3.0'
+
+    // DEBUG START
     debugImplementation 'com.github.whataa:pandora:v1.2.1'
     releaseImplementation 'com.github.whataa:pandora-no-op:v1.2.0'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
-    implementation 'com.blankj:utilcode:1.22.0'
-    //XHY DEBUG END
+    implementation 'com.blankj:utilcode:1.23.4'
+
+    testImplementation group: 'org.json', name: 'json', version: '20170516'
+    // DEBUG END
+    //check updateandroidx.fragment:fragment:1.0.0
+    implementation project(':autoupdate')
+    implementation project(':fragmentation_core')
+    implementation "androidx.fragment:fragment:1.0.0"
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') {
+        transitive = true
+    }
+
 }
 
-ext.abiCodes = ['armeabi-v7a': 1, 'arm64-v8a': 2, x86: 3]
+task goBuild(type: Exec) {
+
+    executable "sh"
+    args "-c", "src/main/clash/make.bash " + minSdkVersion
+}
+
+task goClean(type: Exec) {
+    executable "sh"
+    args "-c", "src/main/clash/clean.bash"
+}
+
+tasks.whenTaskAdded { task ->
+    if ((task.name == 'generateJsonModelDebug' ||
+            task.name == 'generateJsonModelRelease')) {
+        task.dependsOn(goBuild)
+    }
+}
+
+ext.abiCodes = ['armeabi-v7a': 1, 'arm64-v8a': 2, x86: 3, x86_64: 4]
 if (getCurrentFlavor() == 'release') android.applicationVariants.all { variant ->
     variant.outputs.each { output ->
-        def offset = project.ext.abiCodes.get(output.getFilter(com.android.build.OutputFile.ABI))
-        if (offset != null) output.versionCodeOverride = variant.versionCode + offset
+//        def offset = project.ext.abiCodes.get(output.getFilter(com.android.build.OutputFile.ABI))
+//        if (offset != null) output.versionCodeOverride = variant.versionCode + offset
+        //def fileName = "ClashA-${offset}.apk"
+//        println "文件名：-----------------${output.outputFileName}"
+//        println "versionCodeOverride：-----------------${output.versionCodeOverride}"
+//        println "123：-----------------${output}"
+//        println "12223：-----------------${output.versionCodeOverride}"
+        def customAbi = ""
+        if (output.getFilter(com.android.build.OutputFile.ABI) == null) {
+            customAbi = "universal"
+        } else {
+            customAbi = output.getFilter(com.android.build.OutputFile.ABI)
+        }
+        //output.outputFileName = fileName
+        def fileName = "ClashA-${customAbi}-${getCurrentFlavor()}-${output.apkData.versionName}.apk"
+        output.outputFileName = fileName
     }
 }

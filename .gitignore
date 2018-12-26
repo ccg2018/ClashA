@@ -17,9 +17,14 @@ local.properties
 build/
 captures/
 release/
+ccg
 
 .idea/
 *.iml
+
+
+app/src/main/clash/.deps
+app/src/main/clash/bin
 
 core/src/overture/.deps
 core/src/overture/bin
@@ -34,3 +39,7 @@ tv/
 
 # release apks
 *.apk
+
+
+.classpath
+.settings

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:orderInCategory="90"
+            android:title="@string/title_check_update"
+            app:showAsAction="always"
+            android:id="@+id/action_check_update"
+            />
+
+    <item
+            android:orderInCategory="90"
+            android:title="@string/title_dashboard"
+            app:showAsAction="always"
+            android:id="@+id/action_dashboard"
+            />
+
+    <!--TEMP-->
+    <item
+            android:id="@+id/action_not_vpn"
+            android:title="NOT VPN"
+            android:orderInCategory="200"
+            app:showAsAction="never"
+            android:visible="true"
+            android:checkable="true"/>
+</menu>
