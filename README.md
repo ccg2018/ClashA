@@ -14,9 +14,16 @@
 
 ## Features
 ### version 0.0.1-pre2
+- add local web dashboard (thk [haishanh-yacd](https://github.com/haishanh/yacd) )
+- add check update and download install update
+- fix some people bug in 0.0.1-pre1 versionCode 2
 
+#### Notice
+**Please remove 0.0.1-pre1 and install this (Because applicationId has changed)**
 
-### version 0.0.1-pre1 
+<img src="https://github.com/ccg2018/ClashA/raw/master/docs/clashpre2.png" width="400">
+
+### ~~version 0.0.1-pre1~~
 - clash run in Android
 - Download from Url / Import from sdcard
 - use import config.yml socks port(any port all support)
