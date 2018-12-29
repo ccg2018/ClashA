@@ -13,6 +13,15 @@
 - Clash for Windows :  a GUI of Clash on Windows, [Github](https://raw.githubusercontent.com/Fndroid/clash_for_windows_pkg)
 
 ## Features
+### version 0.0.1-pre3
+- fix dashboard webview not destory
+- fix not cross
+- fix many import/download config.yml crash
+- add crashlytics
+- optimize dashboard view (BottomDialog)
+- fix a new path error
+- a new version Web Dashboard(thk [haishanh](https://github.com/haishanh)) 
+
 ### version 0.0.1-pre2
 - add local web dashboard (thk [haishanh-yacd](https://github.com/haishanh/yacd) )
 - add check update and download install update
