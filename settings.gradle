@@ -1,1 +1,1 @@
-include ':app', ':autoupdate', ':fragmentation_core'
+include ':app', ':autoupdate'

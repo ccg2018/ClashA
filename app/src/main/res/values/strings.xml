@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">ClashA</string>
-
+    <string name="quick_toggle">Toggle</string>
     <string name="speed">%s/s</string>
     <string name="stat_summary">Sent: \t\t\t\t\t%3$s\t↑\t%1$s\nReceived: \t%4$s\t↓\t%2$s</string>
 
     <!-- APP -->
     <string name="title_check_update">Check Update</string>
     <string name="title_dashboard">Dashboard</string>
+    <string name="title_subscibe_config">Subscibe Config</string>
+    <string name="title_import_config">Import config</string>
 
 
     <string name="message_dashboard_please_startproxy">Please start proxy</string>
@@ -19,6 +21,7 @@
     <string name="invalid_server">Invalid server name</string>
     <string name="service_failed">Failed to connect the remote server</string>
     <string name="stop">Stop</string>
+    <string name="connect">Connect</string>
     <string name="stopping">Shutting down…</string>
     <string name="vpn_error">%s</string>
     <string name="vpn_permission_denied">Permission denied to create a VPN service</string>
@@ -38,7 +41,11 @@
     <string name="message_read_config_port">socks-port is %s and external-controller is %s in config</string>
 
     <!-- UI -->
-    <string name="settings">Settings</string>
+    <string name="global_settings">Global Settings</string>
+    <string name="logs_view">Logs View</string>
+    <string name="profile_config">Profile Config</string>
+    <string name="profile_name">Profile Name</string>
+    <string name="dialog_delete">Delete</string>
 
     <!-- permission-->
     <string name="permission_rationale_message">You have rejected us to apply for authorization, please agree to
@@ -55,5 +62,45 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <!---->
+    <string name="service_mode">Service mode</string>
+    <string name="service_mode_proxy">Proxy only</string>
+    <string name="service_mode_vpn">VPN</string>
+    <string name="service_mode_transproxy">Transproxy</string>
+
+    <string name="dns_mode">DNS mode</string>
+    <string name="dns_mode_redir">redir-host</string>
+    <string name="dns_mode_fakeip">fake-ip</string>
+
+    <string name="clash_mode">Clash mode (default)</string>
+    <string name="clash_mode_rule">Rule</string>
+    <string name="clash_mode_global">Global</string>
+    <string name="clash_mode_direct">Direct</string>
+
+    <string name="clash_loglevel">Clash Log Level</string>
+    <string name="clash_loglevel_info">Info</string>
+    <string name="clash_loglevel_warning">warning</string>
+    <string name="clash_loglevel_error">error</string>
+    <string name="clash_loglevel_debug">debug</string>
+    <string name="clash_loglevel_silent">silent</string>
+
+
+    <string name="share_over_lan">Share over LAN</string>
+    <string name="api_port">API port</string>
+    <string name="http_port_proxy">HTTP proxy port</string>
+    <string name="port_proxy">SOCKS5 proxy port</string>
+    <string name="port_local_dns">Local DNS port</string>
+    <string name="port_transproxy">Transproxy port</string>
+    <string name="dns_custom_nameserver">Dns Custom(nameserver)</string>
+    <string name="dns_custom_fallback">Dns Custom(fallback)</string>
+    <string name="allow_lan">Allow Lan</string>
+
+
+    <!-- alert category -->
+    <string name="profile_empty">Please select a profile</string>
+    <string name="proxy_empty">Proxy/Password should not be empty</string>
+    <string name="file_manager_missing">Please install a file manager like MiXplorer</string>
+    <string name="not_empty">please input</string>
 
 </resources>

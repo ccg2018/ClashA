@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--app:initialExpandedChildrenCount="3"-->
+    <!--<SwitchPreference android:key="isAutoConnect"-->
+    <!--android:persistent="false"-->
+    <!--android:summary="@string/auto_connect_summary"-->
+    <!--android:title="@string/auto_connect"/>-->
+    <!--<SwitchPreference-->
+    <!--android:key="directBootAware"-->
+    <!--android:icon="@drawable/ic_action_lock"-->
+    <!--android:summary="@string/direct_boot_aware_summary"-->
+    <!--android:title="@string/direct_boot_aware"/>-->
+    <!--<SwitchPreference-->
+    <!--android:key="tcp_fastopen"-->
+    <!--android:icon="@drawable/ic_action_offline_bolt"-->
+    <!--android:summary="@string/tcp_fastopen_summary"-->
+    <!--android:title="TCP Fast Open"/>-->
+
+    <SwitchPreferenceCompat
+            android:key="allowLan"
+            android:title="@string/allow_lan"/>
+
+    <SimpleMenuPreference
+            android:key="serviceMode"
+            android:entries="@array/service_modes"
+            android:entryValues="@array/service_mode_values"
+            android:defaultValue="vpn"
+            android:summary="%s"
+            android:title="@string/service_mode"/>
+
+    <!-- 更改这个设置会导致不可用 暂时取消-->
+    <!--<SimpleMenuPreference-->
+            <!--android:key="clashMode"-->
+            <!--android:entries="@array/clash_modes"-->
+            <!--android:entryValues="@array/clash_mode_values"-->
+            <!--android:defaultValue="Rule"-->
+            <!--android:summary="%s"-->
+            <!--android:title="@string/clash_mode"/>-->
+
+    <SimpleMenuPreference
+            android:key="clashLoglevel"
+            android:entries="@array/clash_loglevels"
+            android:entryValues="@array/clash_loglevel_values"
+            android:defaultValue="info"
+            android:summary="%s"
+            android:title="@string/clash_loglevel"/>
+
+    <AutoSummaryEditTextPreference
+            android:key="portApi"
+            android:inputType="number"
+            android:maxLength="5"
+            app:pref_summaryHasText="%s"
+            android:singleLine="true"
+            android:title="@string/api_port"/>
+    <AutoSummaryEditTextPreference
+            android:key="portHttpProxy"
+            android:inputType="number"
+            android:maxLength="5"
+            app:pref_summaryHasText="%s"
+            android:singleLine="true"
+            android:title="@string/http_port_proxy"/>
+    <AutoSummaryEditTextPreference
+            android:key="portProxy"
+            android:inputType="number"
+            android:maxLength="5"
+            app:pref_summaryHasText="%s"
+            android:singleLine="true"
+            android:title="@string/port_proxy"/>
+
+    <AutoSummaryEditTextPreference
+            android:key="portLocalDns"
+            android:icon="@drawable/ic_action_dns"
+            android:inputType="number"
+            android:maxLength="5"
+            app:pref_summaryHasText="%s"
+            android:singleLine="true"
+            android:title="@string/port_local_dns"/>
+
+    <SimpleMenuPreference
+            android:key="dnsMode"
+            android:entries="@array/dns_modes"
+            android:entryValues="@array/dns_mode_values"
+            android:defaultValue="redir-host"
+            android:summary="%s"
+            android:title="@string/dns_mode"/>
+
+
+    <PreferenceCategory
+            app:key="dnsCustomNameserver"
+            app:title="@string/dns_custom_nameserver">
+
+        <Preference
+                android:key="pref_dns_nameserver_add"
+                android:persistent="false"
+                android:summary="add nameserver and input"
+                android:title="Add Nameserver"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+            app:key="dnsCustomFallback"
+            app:title="@string/dns_custom_fallback">
+
+        <Preference
+                android:key="pref_dns_fallback_add"
+                android:persistent="false"
+                android:summary="add fallback and input"
+                android:title="Add Fallback"/>
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+            app:key="debug"
+            app:title="Debug">
+
+        <Preference
+                android:key="pref_debug"
+                android:persistent="false"
+                android:summary=""
+                android:title="Debug(reset dns config)"/>
+    </PreferenceCategory>
+    <!--<AutoSummaryEditTextPreference-->
+    <!--android:key="portTransproxy"-->
+    <!--android:inputType="number"-->
+    <!--android:maxLength="5"-->
+    <!--app:pref_summaryHasText="%s"-->
+    <!--android:singleLine="true"-->
+    <!--android:title="@string/port_transproxy"/>-->
+</PreferenceScreen>

@@ -1,0 +1,81 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "800adc6f0950081b813ea592d0eec52e",
+    "entities": [
+      {
+        "tableName": "LogMessage",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `src` TEXT, `dst` TEXT, `matchType` TEXT, `GroupName` TEXT, `logType` TEXT, `time` INTEGER NOT NULL, `currentRunDate` INTEGER NOT NULL, `profileId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "src",
+            "columnName": "src",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dst",
+            "columnName": "dst",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "matchType",
+            "columnName": "matchType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "GroupName",
+            "columnName": "GroupName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "logType",
+            "columnName": "logType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentRunDate",
+            "columnName": "currentRunDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "profileId",
+            "columnName": "profileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"800adc6f0950081b813ea592d0eec52e\")"
+    ]
+  }
+}

@@ -77,7 +77,7 @@ class ServiceNotification(private val service: BaseService.Interface, profileNam
             .setTicker(service.getString(R.string.forward_success))
             .setContentTitle(profileName)
             .setContentIntent(MainActivity.pendingIntent(service))
-            .setSmallIcon(R.drawable.ic_service_active)
+            .setSmallIcon(R.drawable.ic_clash_logo)
     private val style = NotificationCompat.BigTextStyle(builder)
     private var isVisible = true
 

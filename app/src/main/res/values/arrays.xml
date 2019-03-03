@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="service_modes">
+        <item>@string/service_mode_proxy</item>
+        <item>@string/service_mode_vpn</item>
+    </string-array>
+    <string-array name="service_mode_values" translatable="false">
+        <item>proxy</item>
+        <item>vpn</item>
+    </string-array>
+
+
+    <string-array name="dns_modes">
+        <item>@string/dns_mode_redir</item>
+        <item>@string/dns_mode_fakeip</item>
+    </string-array>
+    <string-array name="dns_mode_values" translatable="false">
+        <item>redir-host</item>
+        <item>fake-ip</item>
+    </string-array>
+
+    <string-array name="clash_modes">
+        <item>@string/clash_mode_rule</item>
+        <item>@string/clash_mode_global</item>
+        <item>@string/clash_mode_direct</item>
+    </string-array>
+    <string-array name="clash_mode_values" translatable="false">
+        <item>Rule</item>
+        <item>Global</item>
+        <item>Direct</item>
+    </string-array>
+
+    <string-array name="clash_loglevels">
+        <item>@string/clash_loglevel_info</item>
+        <item>@string/clash_loglevel_warning</item>
+        <item>@string/clash_loglevel_error</item>
+        <item>@string/clash_loglevel_debug</item>
+        <item>@string/clash_loglevel_silent</item>
+    </string-array>
+
+    <string-array name="clash_loglevel_values" translatable="false">
+        <item>info</item>
+        <item>warning</item>
+        <item>error</item>
+        <item>debug</item>
+        <item>silent</item>
+    </string-array>
+</resources>

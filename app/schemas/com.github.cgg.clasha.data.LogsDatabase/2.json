@@ -1,0 +1,87 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "88cced773f3f3da6b695e4808cc3f0ee",
+    "entities": [
+      {
+        "tableName": "LogMessage",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `src` TEXT, `dst` TEXT, `matchType` TEXT, `GroupName` TEXT, `originContent` TEXT, `logType` TEXT, `time` INTEGER NOT NULL, `currentRunDate` INTEGER NOT NULL, `profileId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "src",
+            "columnName": "src",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dst",
+            "columnName": "dst",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "matchType",
+            "columnName": "matchType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "GroupName",
+            "columnName": "GroupName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "originContent",
+            "columnName": "originContent",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "logType",
+            "columnName": "logType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentRunDate",
+            "columnName": "currentRunDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "profileId",
+            "columnName": "profileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"88cced773f3f3da6b695e4808cc3f0ee\")"
+    ]
+  }
+}

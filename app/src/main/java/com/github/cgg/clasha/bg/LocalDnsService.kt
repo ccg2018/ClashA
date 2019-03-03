@@ -126,17 +126,17 @@ object LocalDnsService {
                     toString()
                 })
             }
-            LogUtils.i("#### 启动overture ${buildOvertureConfig("overture.conf")}")
+//            LogUtils.i("#### 启动overture ${buildOvertureConfig("overture.conf")}")
 
-            data.processes!!.start(
-                buildAdditionalArguments(
-                    arrayListOf(
-                        File(app.applicationInfo.nativeLibraryDir, Executable.OVERTURE).absolutePath,
-                        "-c",
-                        File(app.filesDir, buildOvertureConfig("overture.conf")).absolutePath
-                    )
-                )
-            )
+//            data.processes!!.start(
+//                buildAdditionalArguments(
+//                    arrayListOf(
+//                        File(app.applicationInfo.nativeLibraryDir, Executable.OVERTURE).absolutePath,
+//                        "-c",
+//                        File(app.filesDir, buildOvertureConfig("overture.conf")).absolutePath
+//                    )
+//                )
+//            )
         }
     }
 }

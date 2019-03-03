@@ -40,8 +40,8 @@ android {
         applicationId "com.github.ccg.clasha"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.sdkVersion
-        versionCode 7
-        versionName "0.0.1-pre6"
+        versionCode 13
+        versionName "0.0.1-beta3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -82,11 +82,35 @@ android {
         }
     }
 
+    flavorDimensions "default"
+    productFlavors {
+        closeBeta {
+            buildConfigField("boolean", "closeBeta", "true")
+        }
+
+        pre {
+            buildConfigField("boolean", "closeBeta", "false")
+        }
+
+        beta {
+            buildConfigField("boolean", "closeBeta", "false")
+        }
+    }
+
     externalNativeBuild {
         ndkBuild {
             path 'src/main/jni/Android.mk'
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
     lintOptions.checkReleaseBuilds false
     splits {
         abi {
@@ -132,24 +156,32 @@ dependencies {
     implementation "androidx.preference:preference:1.0.0"
     implementation "com.google.android.material:material:1.1.0-alpha02"
 //    implementation "androidx.legacy:legacy-support-v4:$androidxVersion"
+    implementation "com.takisoft.preferencex:preferencex:$preferencexVersion"
+    implementation "com.takisoft.preferencex:preferencex-simplemenu:$preferencexVersion"
 
 
-    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.23'
 
-    implementation 'me.rosuh:AndroidFilePicker:0.3.0'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.24', classifier: 'android'
+
+    implementation 'me.rosuh:AndroidFilePicker:0.4.2'
+
+    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45-androidx"
 
     // DEBUG START
-    debugImplementation 'com.github.whataa:pandora:v1.2.1'
-    releaseImplementation 'com.github.whataa:pandora-no-op:v1.2.0'
+    debugImplementation 'com.github.whataa:pandora:v1.3.2'
+    releaseImplementation 'com.github.whataa:pandora-no-op:v1.3.2'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
-    implementation 'com.blankj:utilcode:1.23.4'
+    implementation 'com.blankj:utilcodex:1.23.7'
 
     testImplementation group: 'org.json', name: 'json', version: '20170516'
     // DEBUG END
     //check updateandroidx.fragment:fragment:1.0.0
     implementation project(':autoupdate')
-    implementation project(':fragmentation_core')
     implementation "androidx.fragment:fragment:1.0.0"
+
+    //leancloud
+    implementation "cn.leancloud.android:avoscloud-sdk:4.7.9"
+    implementation "cn.leancloud.android:avoscloud-feedback:4.7.9@aar   "
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') {
         transitive = true

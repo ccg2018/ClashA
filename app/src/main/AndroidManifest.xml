@@ -30,18 +30,21 @@
             android:roundIcon="@mipmap/ic_clasha_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.ClashA">
+
         <meta-data
                 android:name="io.fabric.ApiKey"
                 android:value="400089996adc66e4576858366722242c7564eafb"/>
 
         <activity
                 android:name=".MainActivity"
-                android:theme="@style/Theme.ClashA.Navigation"
+                android:theme="@style/AppTheme.NoActionBar"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
         </activity>
         <activity
@@ -49,8 +52,7 @@
                 android:excludeFromRecents="true"
                 android:launchMode="singleTask"
                 android:taskAffinity=""
-                android:theme="@style/Theme.AppCompat.Translucent">
-        </activity>
+                android:theme="@style/Theme.AppCompat.Translucent"/>
 
         <service
                 android:name=".bg.VpnService"
@@ -67,14 +69,21 @@
                 android:name=".bg.ProxyService"
                 android:directBootAware="true"
                 android:exported="false"
-                android:process=":bg">
+                android:process=":bg"/>
+
+        <service android:name=".bg.TileService" android:label="@string/quick_toggle"
+                 android:process=":bg"
+                 android:icon="@drawable/ic_clash_logo"
+                 android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
         </service>
 
         <activity
                 android:name=".TestActivity"
                 android:label="@string/title_activity_test"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+                android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -8,10 +8,13 @@ import com.crashlytics.android.Crashlytics
 import com.github.ccg.clasha.bg.TrafficMonitor
 import com.github.cgg.clasha.App
 import com.github.cgg.clasha.data.DataStore
+import com.github.cgg.clasha.data.ProfileConfig
+import com.github.cgg.clasha.utils.getGson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.io.IOException
 import java.net.UnknownHostException
@@ -24,7 +27,7 @@ import java.net.UnknownHostException
  * @describe
  */
 
-class ProxyInstance() {
+class ProxyInstance(val profile: ProfileConfig) {
     private var configFile: File? = null
     var trafficMonitor: TrafficMonitor? = null
     suspend fun init(service: BaseService.Interface) {
@@ -45,20 +48,24 @@ class ProxyInstance() {
                 Crashlytics.log(Log.WARN, "ProxyInstance-resolver", "Retry resolving attempt #${++retries}")
             }
         }*/
+
+
     }
 
     fun start(service: BaseService.Interface, stat: File, configFile: File, extraFlag: String? = null) {
         trafficMonitor = TrafficMonitor(stat)
 
         this.configFile = configFile
-
-
+        val config = profile.toJson()
+        val yaml = Yaml()
+        configFile.writeText(yaml.dump(yaml.load(getGson().toJson(config))))
         LogUtils.i(App.TAG, "Clash 配置文件准备完毕")
+        5450
         val cmd = service.buildAdditionalArguments(
             arrayListOf(
                 File((service as Context).applicationInfo.nativeLibraryDir, Executable.CLASH).absolutePath,
                 "-d",
-                App.app.filesDir.absolutePath + File.separator
+                configFile?.parentFile.absolutePath
             )
         )
 

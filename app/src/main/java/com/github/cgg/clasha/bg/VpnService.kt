@@ -155,6 +155,7 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
         worker = ProtectWorker().apply { start() }
         super.startProcesses()
         sendFd(startVpn())
+        data.updateJob?.start()
     }
 
 
@@ -173,9 +174,9 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
         //bypass us
         builder.addDisallowedApplication(packageName)
         builder.addDisallowedApplication("$packageName:bg")
-//        builder.addAllowedApplication("com.android.chrome")
 
         //todo APP bypass
+
         builder.addRoute("0.0.0.0", 0)
         val conn = builder.establish() ?: throw NullConnectionException()
         this.conn = conn
@@ -198,7 +199,7 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
 
         cmd += "--enable-udprelay"
         cmd += "--dnsgw"
-        cmd += "127.0.0.1:${DataStore.portLocalDns}"//portLocalDns${DataStore.portLocalDns}
+        cmd += "127.0.0.1:${DataStore.portLocalDns}"
         data.processes!!.start(cmd, onRestartCallback = {
             try {
                 sendFd(conn.fileDescriptor)

@@ -20,8 +20,13 @@
 
 package com.github.cgg.clasha.bg
 
+import android.system.ErrnoException
+import android.system.Os
+import android.system.OsConstants
 import android.text.TextUtils
+import android.util.Log
 import com.blankj.utilcode.util.LogUtils
+import com.crashlytics.android.Crashlytics
 import com.github.cgg.clasha.App.Companion.app
 import com.github.cgg.clasha.JniHelper
 import java.io.File
@@ -40,20 +45,18 @@ object Executable {
 
     fun killAll() {
         for (process in File("/proc").listFiles { _, name -> TextUtils.isDigitsOnly(name) }) {
-            val exe = File(
-                try {
-                    File(process, "cmdline").readText()
-                } catch (ignore: FileNotFoundException) {
-                    continue
-                }.split(Character.MIN_VALUE, limit = 2).first()
-            )
-            if (exe.parent == app.applicationInfo.nativeLibraryDir && EXECUTABLES.contains(exe.name)) {
-                val errno = JniHelper.sigkill(process.name.toInt())
-                if (errno != 0) {
-                    LogUtils.w(
-                        "kill",
-                        "SIGKILL ${exe.absolutePath} (${process.name}) failed with $errno"
-                    )
+            val exe = File(try {
+                File(process, "cmdline").inputStream().bufferedReader().readText()
+            } catch (_: FileNotFoundException) {
+                continue
+            }.split(Character.MIN_VALUE, limit = 2).first())
+            if (EXECUTABLES.contains(exe.name)) try {
+                Os.kill(process.name.toInt(), OsConstants.SIGKILL)
+            } catch (e: ErrnoException) {
+                if (e.errno != OsConstants.ESRCH) {
+                    e.printStackTrace()
+                    Crashlytics.log(Log.WARN, "kill", "SIGKILL ${exe.absolutePath} (${process.name}) failed")
+                    Crashlytics.logException(e)
                 }
             }
         }

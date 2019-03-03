@@ -2,13 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/main"
            android:checkableBehavior="single">
+        <item android:id="@+id/profileConfig"
+              android:title="@string/profile_config"
+              android:icon="@drawable/ic_action_description"/>
         <item android:id="@+id/globalSettings"
-              android:title="@string/settings"
+              android:title="@string/global_settings"
               android:icon="@drawable/ic_action_settings"/>
+
+        <item android:id="@+id/logsView"
+              android:title="@string/logs_view"
+              android:icon="@drawable/ic_action_logs"/>
+
         <!--test-->
-        <item android:id="@+id/testGo"
-              android:title="Test"
-              android:icon="@drawable/ic_action_settings"/>
+        <!--<item android:id="@+id/testGo"-->
+              <!--android:title="Test"-->
+              <!--android:icon="@drawable/ic_action_settings"/>-->
         <!--test-->
     </group>
 

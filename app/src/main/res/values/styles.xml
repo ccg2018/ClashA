@@ -42,15 +42,28 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
     <style name="Theme.ClashA.Navigation">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>kj
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
     <style name="ThemeOverlay.AppCompat.DayNight" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="ClashABottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
+    <style name="ClashALogItemTextView">
+        <item name="android:textColor">@color/material_blue_grey_900</item>
+    </style>
+    <style name="ClashALogItemTextView.title">
+        <item name="android:layout_marginLeft">4dp</item>
+    </style>
+    <style name="ClashALogItemTextView.Content">
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:textIsSelectable">true</item>
     </style>
 
 

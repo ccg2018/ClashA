@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <!--<import type="com.github.cgg.clasha.data.LogMessage"/>-->
+        <import type="android.view.View"/>
+        <variable name="logmsg" type="com.github.cgg.clasha.data.LogMessage"/>
+    </data>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+    >
+        <RelativeLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+            <!---->
+            <TextView android:background="@drawable/bg_log_num"
+                      android:textColor="@color/material_blue_grey_100"
+                      android:layout_alignParentLeft="true"
+                      android:id="@+id/tv_num"
+                      android:text="@{String.valueOf(logmsg.id)??`0`}"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+            />
+            <!---->
+            <TextView android:id="@+id/tv_time"
+                      android:layout_gravity="right"
+                      android:layout_alignParentRight="true"
+                      android:text="@{logmsg.dateFormatted}"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+            />
+        </RelativeLayout>
+
+        <TextView
+                style="@style/ClashALogItemTextView.title"
+                android:layout_width="match_parent"
+                android:text='@{"["+ logmsg.logType + "]" }'
+                android:layout_height="wrap_content"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:hint="Null"
+                  android:text='@{"src: " + logmsg.src}'
+                  style="@style/ClashALogItemTextView.Content"
+                  android:visibility="@{logmsg.isOtherType? View.GONE: View.VISIBLE}"
+                  android:layout_height="wrap_content"/>
+        <TextView android:layout_width="match_parent"
+                  android:hint="Null"
+                  style="@style/ClashALogItemTextView.Content"
+                  android:text='@{"dst: " + logmsg.dst }'
+                  android:visibility="@{logmsg.isOtherType? View.GONE: View.VISIBLE}"
+                  android:layout_height="wrap_content"/>
+        <TextView
+                android:text='@{"matchType: " + logmsg.matchType}'
+                android:visibility="@{logmsg.isRuleType? View.VISIBLE: View.GONE}"
+                android:layout_width="match_parent"
+                style="@style/ClashALogItemTextView.Content"
+                android:layout_height="wrap_content"/>
+        <TextView
+                android:text='@{"using: " + logmsg.groupName}'
+                android:visibility="@{logmsg.isRuleType? View.VISIBLE: View.GONE}"
+                style="@style/ClashALogItemTextView.Content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:text='@{logmsg.originContent}'
+                android:visibility="@{logmsg.isOtherType? View.VISIBLE: View.GONE}"
+                style="@style/ClashALogItemTextView.Content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

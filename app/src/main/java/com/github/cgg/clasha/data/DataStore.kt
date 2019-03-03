@@ -26,10 +26,11 @@ import com.github.cgg.clasha.App.Companion.app
 import com.github.cgg.clasha.utils.Key
 import com.github.cgg.clasha.utils.parsePort
 import com.github.shadowsocks.database.PublicDatabase
+import org.json.JSONObject
 
 object DataStore {
     val publicStore = RoomPreferenceDataStore(PublicDatabase.kvPairDao)
-    // privateStore will only be used as temp storage for ProfileConfigFragment
+    // privateStore will only be used as temp storage for ProfileListFragment
     //val privateStore = RoomPreferenceDataStore(PrivateDatabase.kvPairDao)
 
     // hopefully hashCode = mHandle doesn't change, currently this is true from KitKat to Nougat
@@ -61,9 +62,21 @@ object DataStore {
             else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         }
     val listenAddress get() = if (publicStore.getBoolean(Key.shareOverLan, false)) "0.0.0.0" else "127.0.0.1"
-    var serviceMode:String
+    var serviceMode: String
         get() = publicStore.getString(Key.serviceMode) ?: Key.modeVpn
         set(value) = publicStore.putString(Key.serviceMode, value)
+
+    var dnsMode: String
+        get() = publicStore.getString(Key.dnsMode) ?: Key.modeFakeip
+        set(value) = publicStore.putString(Key.dnsMode, value)
+
+    var clashMode: String
+        get() = publicStore.getString(Key.clashMode, Key.clashModeRule)!!
+        set(value) = publicStore.putString(Key.clashMode, value)
+    var clashLoglevel: String
+        get() = publicStore.getString(Key.clashLoglevel, Key.clashLogInfo)!!
+        set(value) = publicStore.putString(Key.clashLoglevel, value)
+
     var portProxy: Int
         get() = getLocalPort(Key.portProxy, 7891)
         set(value) = publicStore.putString(Key.portProxy, value.toString())
@@ -76,13 +89,20 @@ object DataStore {
     var portHttpProxy: Int
         get() = getLocalPort(Key.portHttpProxy, 7890)
         set(value) = publicStore.putString(Key.portHttpProxy, value.toString())
-    var portController: Int
-        get() = getLocalPort(Key.portController, 7892)
-        set(value) = publicStore.putString(Key.portController, value.toString())
+    var portApi: Int
+        get() = getLocalPort(Key.portApi, 7892)
+        set(value) = publicStore.putString(Key.portApi, value.toString())
 
-    var tempConfigPath: String
-        get() = publicStore.getString("tempConfigPath", "")!!
-        set(value) = publicStore.putString("tempConfigPath", value.toString())
+    var dnsConfig: String
+        get() = publicStore.getString(
+            Key.dnsConfig,
+            "{\"nameserver\":[\"tls://dns.rubyfish.cn:853\",\"114.114.114.114\"],\"enhanced-mode\":\"redir-host\",\"fallback\":[\"tls://dns.rubyfish.cn:853\",\"tls://dns.google\"],\"enable\":true,\"ipv6\":false,\"listen\":\"0.0.0.0:5450\"}"
+        )!!
+        set(value) = publicStore.putString(Key.dnsConfig, value.toString())
+
+    var allowLan: Boolean
+        get() = publicStore.getBoolean(Key.allowLan, false)
+        set(value) = publicStore.putBoolean(Key.allowLan, value)
 
 
     /**
@@ -92,6 +112,8 @@ object DataStore {
         if (publicStore.getString(Key.portProxy) == null) portProxy = portProxy
         if (publicStore.getString(Key.portLocalDns) == null) portLocalDns = portLocalDns
         if (publicStore.getString(Key.portTransproxy) == null) portTransproxy = portTransproxy
+        if (publicStore.getString(Key.portApi) == null) portApi = portApi
+        if (publicStore.getString(Key.dnsConfig) == null) dnsConfig = dnsConfig
     }
 
 

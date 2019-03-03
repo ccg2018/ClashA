@@ -2,25 +2,41 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:orderInCategory="90"
+            android:orderInCategory="91"
             android:title="@string/title_check_update"
-            app:showAsAction="always"
+            app:showAsAction="never"
             android:id="@+id/action_check_update"
-            />
+    />
 
     <item
-            android:orderInCategory="90"
+            android:orderInCategory="1"
             android:title="@string/title_dashboard"
             app:showAsAction="always"
             android:id="@+id/action_dashboard"
-            />
+    />
+
+    <item
+            android:orderInCategory="92"
+            android:title="@string/title_import_config"
+            app:showAsAction="never"
+            android:id="@+id/action_import_config"
+    />
+
+    <item
+            android:orderInCategory="93"
+            android:title="@string/title_subscibe_config"
+            app:showAsAction="never"
+            android:id="@+id/action_download_config"
+    />
+
 
     <!--TEMP-->
+
     <item
-            android:id="@+id/action_not_vpn"
-            android:title="NOT VPN"
+            android:id="@+id/action_make_config"
+            android:title="fix Country.mmdb"
             android:orderInCategory="200"
             app:showAsAction="never"
             android:visible="true"
-            android:checkable="true"/>
+    />
 </menu>

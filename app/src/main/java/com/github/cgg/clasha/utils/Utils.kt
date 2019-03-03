@@ -15,11 +15,15 @@ import android.system.OsConstants
 import android.util.Log
 import android.util.TypedValue
 import androidx.annotation.AttrRes
+import com.blankj.utilcode.util.LogUtils
 import com.crashlytics.android.Crashlytics
 import com.github.cgg.clasha.App
-import com.github.cgg.clasha.JniHelper
-import com.github.cgg.clasha.MainActivity
 import com.github.cgg.clasha.data.DataStore
+import com.google.gson.*
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.lang.reflect.Type
 import java.net.InetAddress
 import java.net.URLConnection
 import java.util.*
@@ -101,7 +105,7 @@ fun loadPortFromConfig(value: Any?) {
         if (value.containsKey("external-controller")) {
             val hostAndPort = value.get("external-controller") as String
             val port = hostAndPort.split(":")[1]
-            DataStore.portController = port.toInt()
+            DataStore.portApi = port.toInt()
         }
 
         if (value.containsKey("port")) {
@@ -115,4 +119,90 @@ fun loadPortFromConfig(value: Any?) {
         Crashlytics.logException(e)
         Crashlytics.log(Log.ERROR, App.TAG, e.localizedMessage)
     }
+}
+
+fun addTempDNS(): JSONObject {
+    return JSONObject("{\"nameserver\":[\"1.2.4.8\",\"114.114.114.114\",\"223.5.5.5\",\"tls://dns.rubyfish.cn:853\"],\"enhanced-mode\":\"redir-host\",\"fallback\":[\"tls://dns.rubyfish.cn:853\",\"tls://dns.google\"],\"enable\":true,\"ipv6\":false,\"listen\":\"0.0.0.0:5450\"}")
+}
+
+fun toMap(jsonObject: JSONObject): Map<String, Objects> {
+    val result = HashMap<String, Objects>()
+    val iterator = jsonObject.keys()
+    var key: String? = null
+    var value: Objects? = null
+    while (iterator.hasNext()) {
+        key = iterator.next()
+        try {
+            value = jsonObject.get(key) as Objects?
+        } catch (e: JSONException) {
+            LogUtils.e(e)
+        }
+        result[key] = value!!
+    }
+    return result
+}
+
+fun getGson(): Gson {
+    return GsonBuilder().registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
+        .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter()).create()
+}
+
+open class JSONObjectAdapter : JsonSerializer<JSONObject>, JsonDeserializer<JSONObject> {
+    override fun serialize(src: JSONObject?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement? {
+        if (src == null) {
+            return null
+        }
+
+        var jsonObject = JsonObject()
+        val keys = src.keys()
+        while (keys.hasNext()) {
+            var key = keys.next()
+            var value = src.opt(key)
+            var jsonElement = context?.serialize(value, value::class.java)
+            jsonObject.add(key, jsonElement)
+        }
+
+        return jsonObject
+    }
+
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): JSONObject? {
+        if (json == null) {
+            return null
+        }
+        try {
+            return JSONObject(json.toString())
+        } catch (e: JSONException) {
+            throw  JsonParseException(e)
+        }
+    }
+
+}
+
+class JSONArrayAdapter : JsonSerializer<JSONArray>, JsonDeserializer<JSONArray> {
+    override fun serialize(src: JSONArray?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement? {
+        if (src == null) {
+            return null
+        }
+
+        var jsonArray = JsonArray()
+        for (i in 0 until src.length()) {
+            var obj = src.opt(i)
+            var jsonElement = context?.serialize(obj, obj::class.java)
+            jsonArray.add(jsonElement)
+        }
+
+        return jsonArray
+    }
+
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): JSONArray? {
+        if (json == null) {
+            return null
+        }
+        try {
+            return JSONArray(json.toString())
+        } catch (e: JSONException) {
+            throw  JsonParseException(e)
+        }
+    }
+
 }

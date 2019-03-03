@@ -12,22 +12,25 @@ import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import com.github.cgg.clasha.utils.DeviceStorageApp
 import androidx.core.content.getSystemService
 import androidx.work.WorkManager
+import com.avos.avoscloud.AVOSCloud
 import com.blankj.utilcode.util.FileIOUtils
 import com.blankj.utilcode.util.LogUtils
 import com.crashlytics.android.Crashlytics
 import com.github.cgg.clasha.aidl.ClashAConnection
-import com.github.cgg.clasha.bg.BaseService
+import com.github.cgg.clasha.data.ConfigManager
+import com.github.cgg.clasha.data.DataStore
+import com.github.cgg.clasha.data.ProfileConfig
 import com.github.cgg.clasha.utils.Action
+import com.github.cgg.clasha.utils.AppExecutors
+import com.github.cgg.clasha.utils.DeviceStorageApp
 import io.fabric.sdk.android.Fabric
-import java.io.ByteArrayInputStream
 import java.io.File
 
 /**
- * @Author: CGG
- * @Email:
+ * @Author: ccg
+ * @Email: ccgccg2019@gmail.com
  * @program: ClashA
  * @create: 2018-12-25
  * @describe
@@ -40,6 +43,7 @@ class App : Application() {
     }
 
     val handler by lazy { Handler(Looper.getMainLooper()) }
+    val mAppExecutors by lazy { AppExecutors() }
 
     //加密data分区 用于支持
     val deviceStorage by lazy { if (Build.VERSION.SDK_INT < 24) this else DeviceStorageApp(this) }
@@ -48,11 +52,19 @@ class App : Application() {
                 DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER
     }
 
+
+    val currentProfileConfig: ProfileConfig?
+        get() {
+            return ConfigManager.getProfileConfig(DataStore.profileId) ?: return null
+        }
+
+
     fun getPackageInfo(packageName: String) = packageManager.getPackageInfo(
         packageName,
         if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES
         else @Suppress("DEPRECATION") PackageManager.GET_SIGNATURES
     )!!
+
 
     fun startService() = ContextCompat.startForegroundService(app, Intent(app, ClashAConnection.serviceClass))
 
@@ -64,6 +76,14 @@ class App : Application() {
         app = this
         Fabric.with(deviceStorage, Crashlytics())
 
+        //closeBeta
+//        if (BuildConfig.closeBeta) {
+            AVOSCloud.setDebugLogEnabled(true)
+            AVOSCloud.initialize(this, "SlAPxH8o80VD4yMU5cHlhxu7-gzGzoHsz", "VILAayNDQ0qm1JoNEQeTGsGc")
+//        }
+        //end closeBeta
+
+
         initClash()
         initLog()
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -73,11 +93,21 @@ class App : Application() {
     }
 
     private fun initClash() {
+        var isNeedCopy = false
         var file = File(app.filesDir, "Country.mmdb")
-        if (!file.exists()) {
-            val inputStream = assets.open("Country.mmdb")
-            FileIOUtils.writeFileFromIS(file, inputStream)
+        if (file.exists()) {
+            if (file.length() <= 3741143) isNeedCopy = true
+        } else {
+            isNeedCopy = true
         }
+
+        if (isNeedCopy) {
+            mAppExecutors.diskIO.execute {
+                val inputStream = assets.open("Country.mmdb")
+                FileIOUtils.writeFileFromIS(file, inputStream)
+            }
+        }
+
     }
 
     // init it in ur application
