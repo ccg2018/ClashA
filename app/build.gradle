@@ -124,6 +124,13 @@ android {
             new File(project(':app').buildDir, "intermediates/bundles/${getCurrentFlavor()}/jni")
     sourceSets.main.jniLibs.srcDirs += new File(project(':app').projectDir, "src/main/clash/bin")
 
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "ClashA-${variant.productFlavors[0].name}-${versionName}-${buildType.name}.apk"
+        }
+    }
+
 }
 
 dependencies {
