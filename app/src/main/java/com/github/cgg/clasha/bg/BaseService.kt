@@ -380,10 +380,6 @@ object BaseService {
 
                 } while (contentLine != null)
 
-//                while (contentLine!=null) {
-//                    LogUtils.eTag(TAG, "okhttp: $contentLine")
-//                    contentLine = br.readLine()
-//                }
             } catch (e: IOException) {
             }
         }

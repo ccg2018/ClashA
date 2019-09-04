@@ -3,6 +3,7 @@ package com.github.cgg.clasha.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -36,6 +37,7 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
     private ClashABottomSheetWebview mWebview;
     private boolean isCanBack = true;
     private boolean isShowNavBack = true;
+    private String port;
 
     public ClashAWebviewBottomSheetDialog(@NonNull Context context) {
         super(context);
@@ -168,6 +170,12 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
         }
 
         @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            loadJS("window.localStorage.setItem('" + "externalControllerHost" + "','" + "127.0.0.1" + "');");
+            loadJS("window.localStorage.setItem('" + "externalControllerPort" + "','" + port + "');");
+        }
+
+        @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
@@ -199,6 +207,23 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
     public void loadUrl(String url) {
         if (mWebview == null) return;
         mWebview.loadUrl(url);
+    }
+
+    private void loadJS(final String trigger) {
+        mWebview.post(new Runnable() {
+            @Override
+            public void run() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    mWebview.evaluateJavascript(trigger, null);
+                } else {
+                    mWebview.loadUrl(trigger);
+                }
+            }
+        });
+    }
+
+    public void setPort(String port) {
+        this.port = port;
     }
 
     public void setCanBack(boolean canBack) {
