@@ -151,8 +151,10 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         dialog.setCanBack(false)
                         dialog.setShowBackNav(false)
                         dialog.setPort(DataStore.portApi.toString())
+                        dialog.loadUrl("http://127.0.0.1:65535/index.html")
+
 //                        dialog.loadUrl("file:///android_asset/yacd/index_0.35.html?port=${DataStore.portApi}#/proxies")
-                        dialog.loadUrl("http://clash.razord.top/")
+                        //dialog.loadUrl("http://clash.razord.top/")
                         dialog.show()
                         dialog.setMaxHeight(ScreenUtils.getScreenHeight())
                         dialog.setPeekHeight(ScreenUtils.getScreenHeight())

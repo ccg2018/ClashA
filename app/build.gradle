@@ -190,6 +190,11 @@ dependencies {
     implementation "cn.leancloud.android:avoscloud-sdk:4.7.9"
     implementation "cn.leancloud.android:avoscloud-feedback:4.7.9@aar   "
 
+    implementation 'com.yanzhenjie.andserver:api:2.0.5'
+    annotationProcessor 'com.yanzhenjie.andserver:processor:2.0.5'
+    kapt 'com.yanzhenjie.andserver:processor:2.0.5'
+
+
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') {
         transitive = true
     }

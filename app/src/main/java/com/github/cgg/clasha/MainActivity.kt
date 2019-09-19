@@ -31,6 +31,11 @@ import com.github.cgg.clasha.utils.Key.isONKey
 import com.github.cgg.clasha.widget.EditTextDialog
 import com.github.cgg.clasha.widget.ServiceButton
 import com.google.android.material.navigation.NavigationView
+import com.yanzhenjie.andserver.AndServer
+import com.yanzhenjie.andserver.Server
+import java.lang.Exception
+import java.net.InetAddress
+import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenceDataStoreChangeListener,
@@ -48,6 +53,7 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
             Intent(context, MainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0
         )
 
+        var server: Server? = null
     }
 
 
@@ -168,6 +174,8 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
         changeState(BaseService.State.Idle)   // reset everything to init state
         connection.connect(this, this)
         DataStore.publicStore.registerChangeListener(this)
+
+        initHttpServer()
     }
 
     private fun toggle() = when {
@@ -394,6 +402,37 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
         super.onDestroy()
         DataStore.publicStore.unregisterChangeListener(this)
         connection.disconnect(this)
+        stopHttpServer()
+    }
+
+
+    private fun initHttpServer() {
+        server = AndServer.serverBuilder(this)
+            .inetAddress(InetAddress.getByName("127.0.0.1"))
+            .port(65535)
+            .timeout(5, TimeUnit.SECONDS)
+            .listener(object : Server.ServerListener {
+                override fun onException(e: Exception?) {
+                    LogUtils.iTag(TAG, e)
+                }
+
+                override fun onStarted() {
+                    LogUtils.iTag(TAG, "HTTP server started")
+                }
+
+                override fun onStopped() {
+                    LogUtils.iTag(TAG, "HTTP server Stopped")
+                }
+
+            })
+            .build()
+        server?.startup()
+    }
+
+    private fun stopHttpServer() {
+        if (server?.isRunning == true) {
+            server?.shutdown()
+        }
     }
 
 }
