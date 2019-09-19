@@ -67,6 +67,10 @@ android {
             storeFile keyfile
             //keystore的密码
             storePassword keystoreAliasPSW
+
+            v1SigningEnabled true
+            v2SigningEnabled false
+
         }
     }
 
@@ -191,7 +195,6 @@ dependencies {
     implementation "cn.leancloud.android:avoscloud-feedback:4.7.9@aar   "
 
     implementation 'com.yanzhenjie.andserver:api:2.0.5'
-    annotationProcessor 'com.yanzhenjie.andserver:processor:2.0.5'
     kapt 'com.yanzhenjie.andserver:processor:2.0.5'
 
 

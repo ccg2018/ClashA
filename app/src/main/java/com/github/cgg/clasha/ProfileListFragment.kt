@@ -120,6 +120,23 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
         rv.adapter = profileConfigsAdapter
         //        layoutManager.scrollToPosition(profilesAdapter.profiles.indexOfFirst { it.id == DataStore.profileId })
 
+        toolbar.findViewById<View>(R.id.action_dashboard).setOnLongClickListener {
+            when ((activity as MainActivity).state) {
+                BaseService.State.Connected -> {
+                    val dialog = ClashAWebviewBottomSheetDialog(context!!)
+                    dialog.setTitle(R.string.title_dashboard)
+                    dialog.setCanBack(false)
+                    dialog.setShowBackNav(false)
+                    dialog.setPort(DataStore.portApi.toString())
+                    dialog.loadUrl("http://clash.razord.top/")
+                    dialog.show()
+                    dialog.setMaxHeight(ScreenUtils.getScreenHeight())
+                    dialog.setPeekHeight(ScreenUtils.getScreenHeight())
+                }
+                else -> ToastUtils.showShort(R.string.message_dashboard_please_startproxy)
+            }
+            true
+        }
     }
 
     override fun onStart() {
