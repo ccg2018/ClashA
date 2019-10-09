@@ -74,6 +74,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
     private lateinit var profileConfigsAdapter: ProfileConfigsAdapter
     private lateinit var mItemDragAndSwipeCallback: ItemDragAndSwipeCallback
     private lateinit var mItemTouchHelper: ItemTouchHelper
+    private lateinit var snackBarRootView: View
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -84,6 +85,8 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
         toolbar.setTitle(R.string.app_name)
         toolbar.inflateMenu(R.menu.main_menu)
         toolbar.setOnMenuItemClickListener(this)
+
+        snackBarRootView = view.findViewById(R.id.content)
 
         val rv = view.findViewById<RecyclerView>(R.id.list)
         val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -207,8 +210,18 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         val inputStream = context!!.assets.open("Country.mmdb")
                         val su = FileIOUtils.writeFileFromIS(file, inputStream)
                         LogUtils.w("copy Country.mmdb is $su")
+                        SnackbarUtils.with(snackBarRootView).setDuration(SnackbarUtils.LENGTH_LONG)
+                            .apply {
+                                if (su) {
+                                    setMessage("fix Country.mmdb (copy Country.mmdb) is success")
+                                    setBgResource(R.color.colorPrimary)
+                                    showSuccess()
+                                } else {
+                                    setMessage("fix Country.mmdb (copy Country.mmdb) is failed")
+                                    showError()
+                                }
+                            }
                     }
-
                 }
             }
             7 -> {
