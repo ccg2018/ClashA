@@ -457,6 +457,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         val fileTypes = ArrayList<FileType>()
 
                         fileTypes.add(YmlFileType())
+                        fileTypes.add(YamlFileType())
                         fileTypes
                     }
 
@@ -473,7 +474,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                 .filter(object : AbstractFileFilter() {
                     override fun doFilter(listData: ArrayList<FileItemBeanImpl>): ArrayList<FileItemBeanImpl> {
                         return ArrayList(listData.filter { item ->
-                            ((item.isDir) || (item.fileType is YmlFileType))
+                            ((item.isDir) || (item.fileType is YmlFileType) || (item.fileType is YamlFileType))
                         })
                     }
                 })
