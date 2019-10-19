@@ -99,6 +99,10 @@ android {
         beta {
             buildConfigField("boolean", "closeBeta", "false")
         }
+
+        night {
+            buildConfigField("boolean", "closeBeta", "false")
+        }
     }
 
     externalNativeBuild {
@@ -127,13 +131,6 @@ android {
     sourceSets.main.jniLibs.srcDirs +=
             new File(project(':app').buildDir, "intermediates/bundles/${getCurrentFlavor()}/jni")
     sourceSets.main.jniLibs.srcDirs += new File(project(':app').projectDir, "src/main/clash/bin")
-
-
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "ClashA-${variant.productFlavors[0].name}-${versionName}-${buildType.name}.apk"
-        }
-    }
 
 }
 
@@ -238,8 +235,12 @@ if (getCurrentFlavor() == 'release') android.applicationVariants.all { variant -
         } else {
             customAbi = output.getFilter(com.android.build.OutputFile.ABI)
         }
+        def nightString = ""
+        if (variant.productFlavors[0].name == 'night') {
+            nightString = "-${variant.productFlavors[0].name}-${new Date().format("YYYY-MM-dd", TimeZone.getTimeZone("GMT+08:00"))}"
+        }
         //output.outputFileName = fileName
-        def fileName = "ClashA-${customAbi}-${getCurrentFlavor()}-${output.apkData.versionName}.apk"
+        def fileName = "ClashA-${customAbi}-${getCurrentFlavor()}-${output.apkData.versionName}${nightString}.apk"
         output.outputFileName = fileName
     }
 }
