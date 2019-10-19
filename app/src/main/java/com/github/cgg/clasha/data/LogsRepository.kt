@@ -34,4 +34,8 @@ class LogsRepository private constructor(private val logsLocalDataSource: LogsDa
             }
         })
     }
+
+    override fun removeAll() {
+        logsLocalDataSource.removeAll()
+    }
 }

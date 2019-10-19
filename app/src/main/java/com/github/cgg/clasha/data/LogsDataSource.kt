@@ -15,4 +15,6 @@ interface LogsDataSource {
     }
 
     fun getLogsByPage(profileId: Long, page: Int = 0, callback: LoadLogsCallback)
+
+    fun removeAll()
 }

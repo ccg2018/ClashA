@@ -16,6 +16,7 @@ private constructor(
     private val logsDao: LogMessage.Dao
 ) : LogsDataSource {
 
+
     companion object {
         @Volatile
         private var instance: LogsLocalDataSource? = null
@@ -35,6 +36,12 @@ private constructor(
                     callback.onLogsLoaded(logs)
                 }
             }
+        }
+    }
+
+    override fun removeAll() {
+        mAppExecutors.diskIO.execute {
+            logsDao.removeAll()
         }
     }
 }

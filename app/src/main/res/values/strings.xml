@@ -9,6 +9,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_subscibe_config">Subscibe Config</string>
     <string name="title_import_config">Import config</string>
+    <string name="title_remove_all_logs">Remove All Logs</string>
 
 
     <string name="message_dashboard_please_startproxy">Please start proxy</string>

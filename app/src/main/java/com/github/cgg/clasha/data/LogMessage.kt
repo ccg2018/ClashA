@@ -2,10 +2,7 @@ package com.github.cgg.clasha.data
 
 import android.os.Parcelable
 import androidx.lifecycle.LiveData
-import androidx.room.Entity
-import androidx.room.Insert
-import androidx.room.PrimaryKey
-import androidx.room.Query
+import androidx.room.*
 import com.github.cgg.clasha.utils.Key
 import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
@@ -45,6 +42,9 @@ data class LogMessage constructor(
 
         @Query("SELECT * FROM `LogMessage` WHERE `profileId` = :id ORDER BY id DESC limit :page,${Key.LOG_PAGESIZE} ")
         fun getByPage(id: Long, page: Int): List<LogMessage>
+
+        @Query("DELETE FROM `LogMessage`")
+        fun removeAll()
     }
 
     fun getDateFormatted(): String {

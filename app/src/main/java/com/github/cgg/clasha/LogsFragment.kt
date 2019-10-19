@@ -2,8 +2,10 @@ package com.github.cgg.clasha
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
@@ -31,7 +33,19 @@ import com.github.cgg.clasha.utils.Key.LOG_PAGESIZE
  * @create: 2019-06-09
  * @describe
  */
-class LogsFragment : ToolbarFragment(), FragmentUtils.OnBackClickListener {
+class LogsFragment : ToolbarFragment(), FragmentUtils.OnBackClickListener, Toolbar.OnMenuItemClickListener {
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.action_remove_all_logs -> {
+                LogsRepository
+                    .getInstance(LogsLocalDataSource.getInstance(app.mAppExecutors, LogsDatabase.logMessageDao))
+                    .removeAll()
+                mAdapter.data.clear()
+                mAdapter.notifyDataSetChanged()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     lateinit var dataBinding: LayoutLogsViewBinding
     lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
@@ -65,6 +79,10 @@ class LogsFragment : ToolbarFragment(), FragmentUtils.OnBackClickListener {
         LogUtils.iTag("life", "onViewCreated")
 
         super.onViewCreated(view, savedInstanceState)
+
+        toolbar.inflateMenu(R.menu.logs_menu)
+        toolbar.setOnMenuItemClickListener(this)
+
         mSwipeRefreshLayout = dataBinding.root.findViewById(R.id.swipeLayout)
         list = dataBinding.root.findViewById(R.id.list)
         dataBinding.logsViewModel = logsViewModel
