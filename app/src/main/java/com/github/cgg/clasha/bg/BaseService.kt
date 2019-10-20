@@ -8,7 +8,6 @@ import android.os.*
 import android.util.Log
 import androidx.core.content.getSystemService
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.crashlytics.android.Crashlytics
 import com.github.cgg.clasha.App.Companion.TAG
 import com.github.cgg.clasha.App.Companion.app
@@ -360,20 +359,13 @@ object BaseService {
                         )
                         log.originContent = payload
                         if ("debug" == type && payload.contains("DNS")) {
-                            val split = payload.split(" ")
-                            log.src = split[1]
-                            log.dst = split[3]
                             log.logType = Key.LOG_TYPE_DNS
                         } else if ("info" == type && payload.contains("match") && payload.contains("using")) {
-                            val split = payload.split(" ")
-                            log.src = split[0]
-                            log.dst = split[2]
-                            log.matchType = split[4]
-                            log.GroupName = split[6]
                             log.logType = Key.LOG_TYPE_RULE
                         } else {
                             log.logType = Key.LOG_TYPE_OTHER
                         }
+                        log.content = payload
                         LogsDatabase.logMessageDao.create(log)
 
                     }

@@ -34,6 +34,7 @@
         </RelativeLayout>
 
         <TextView
+                android:layout_marginTop="@dimen/layout_16dp"
                 style="@style/ClashALogItemTextView.title"
                 android:layout_width="match_parent"
                 android:text='@{"["+ logmsg.logType + "]" }'
@@ -41,34 +42,10 @@
 
         <TextView android:layout_width="match_parent"
                   android:hint="Null"
-                  android:text='@{"src: " + logmsg.src}'
+                  android:text='@{"" + logmsg.content}'
                   style="@style/ClashALogItemTextView.Content"
-                  android:visibility="@{logmsg.isOtherType? View.GONE: View.VISIBLE}"
+                  android:layout_marginBottom="@dimen/layout_16dp"
                   android:layout_height="wrap_content"/>
-        <TextView android:layout_width="match_parent"
-                  android:hint="Null"
-                  style="@style/ClashALogItemTextView.Content"
-                  android:text='@{"dst: " + logmsg.dst }'
-                  android:visibility="@{logmsg.isOtherType? View.GONE: View.VISIBLE}"
-                  android:layout_height="wrap_content"/>
-        <TextView
-                android:text='@{"matchType: " + logmsg.matchType}'
-                android:visibility="@{logmsg.isRuleType? View.VISIBLE: View.GONE}"
-                android:layout_width="match_parent"
-                style="@style/ClashALogItemTextView.Content"
-                android:layout_height="wrap_content"/>
-        <TextView
-                android:text='@{"using: " + logmsg.groupName}'
-                android:visibility="@{logmsg.isRuleType? View.VISIBLE: View.GONE}"
-                style="@style/ClashALogItemTextView.Content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        <TextView
-                android:text='@{logmsg.originContent}'
-                android:visibility="@{logmsg.isOtherType? View.VISIBLE: View.GONE}"
-                style="@style/ClashALogItemTextView.Content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <!--android:visibility="@{logmsg.isOtherType? View.GONE: View.VISIBLE}"-->
     </LinearLayout>
 </layout>

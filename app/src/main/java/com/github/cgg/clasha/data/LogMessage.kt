@@ -21,10 +21,7 @@ import java.util.*
 data class LogMessage constructor(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
-    var src: String? = "",//rule:127 -> host,dns host -> ip
-    var dst: String? = "",
-    var matchType: String? = "",
-    var GroupName: String? = "",
+    var content: String? = "",//rule:127 -> host,dns host -> ip
     var originContent: String? = "",
     var logType: String? = "",//DNS/rule
     var time: Long,

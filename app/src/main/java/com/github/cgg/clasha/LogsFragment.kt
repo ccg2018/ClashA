@@ -120,11 +120,9 @@ class LogsFragment : ToolbarFragment(), FragmentUtils.OnBackClickListener, Toolb
     }
 
     private fun setData(isRefresh: Boolean, data: List<LogMessage>) {
-        LogUtils.json("setData", data)
         nextRequestPage++
         if (isRefresh) {
             val calculateDiff = DiffUtil.calculateDiff(LogDiffCallback(mAdapter.data, data))
-//            mAdapter.setNewData(data)
             mAdapter.data.clear()
             mAdapter.data.addAll(data)
             logsViewModel.setData(data)

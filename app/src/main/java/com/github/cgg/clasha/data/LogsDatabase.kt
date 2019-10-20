@@ -14,7 +14,7 @@ import com.github.cgg.clasha.utils.Key
  * @create: 2019-05-30
  * @describe
  */
-@Database(entities = [LogMessage::class], version = 2)
+@Database(entities = [LogMessage::class], version = 3)
 @TypeConverters(DateConverters::class)
 abstract class LogsDatabase : RoomDatabase() {
 
