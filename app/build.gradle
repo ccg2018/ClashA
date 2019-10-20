@@ -41,7 +41,7 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.sdkVersion
         versionCode 14
-        versionName "0.0.1-beta4"
+        versionName "0.0.1-beta4-night-" + getVersionCodePrefix()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -168,7 +168,6 @@ dependencies {
     implementation "com.takisoft.preferencex:preferencex-simplemenu:$preferencexVersion"
 
 
-
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.24', classifier: 'android'
 
     implementation 'me.rosuh:AndroidFilePicker:0.4.2'
@@ -235,12 +234,15 @@ if (getCurrentFlavor() == 'release') android.applicationVariants.all { variant -
         } else {
             customAbi = output.getFilter(com.android.build.OutputFile.ABI)
         }
-        def nightString = ""
-        if (variant.productFlavors[0].name == 'night') {
-            nightString = "-${variant.productFlavors[0].name}-${new Date().format("YYYY-MM-dd", TimeZone.getTimeZone("GMT+08:00"))}"
-        }
         //output.outputFileName = fileName
-        def fileName = "ClashA-${customAbi}-${getCurrentFlavor()}-${output.apkData.versionName}${nightString}.apk"
+        def fileName = "ClashA-${customAbi}-${getCurrentFlavor()}-${output.apkData.versionName}.apk"
         output.outputFileName = fileName
     }
 }
+
+def getVersionCodePrefix() {
+    def date = new Date()
+    def versionCode = date.format('yyyyMMddhhmm')
+    return versionCode
+}
+
