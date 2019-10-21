@@ -273,7 +273,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
         var configName: String = ""
         var progressDialog: ProgressDialog? = null
         var profileConfigId: Long? = null
-        var updateCallback: (() -> Unit)? = null
+        var updateCallback: ((config: ProfileConfig) -> Unit)? = null
 
         override fun onPreExecute() {
             super.onPreExecute()
@@ -325,8 +325,9 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                     if (profileConfigId == null) {
                         ConfigManager.createProfileConfig(config)
                     } else {
+                        config.time = System.currentTimeMillis()
                         ConfigManager.updateProfileConfig(config)
-                        updateCallback?.invoke()
+                        updateCallback?.invoke(config)
                     }
 
                     ToastUtils.showLong(R.string.message_download_config_success)
@@ -385,17 +386,27 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
             if (index >= 0) notifyItemChanged(index)
         }
 
+        fun refreshConfig(config: ProfileConfig) {
+            val index = data.indexOfFirst { it.id == config.id }
+            if (index >= 0) {
+                data[index] = config
+                notifyItemChanged(index)
+            }
+        }
+
 
         override fun convert(helper: BaseViewHolder, item: ProfileConfig) {
             helper.setText(android.R.id.text1, item.configName)
+            helper.setText(R.id.text_update_time, getString(R.string.iterm_update_time, item.getDateFormatted()))
+
             if (TextUtils.isEmpty(item.url)) {
                 helper.setGone(R.id.refresh_update, false)
             } else {
                 helper.setGone(R.id.refresh_update, true)
             }
             //todo
-            helper.getView<AppCompatImageView>(R.id.refresh_update).setOnClickListener {
-                it.isEnabled = false
+            helper.getView<AppCompatImageView>(R.id.refresh_update).setOnClickListener { itView ->
+                itView.isEnabled = false
                 if (!TextUtils.isEmpty(item.url)) {
                     //显示正在加载
                     DownloadUrl().apply {
@@ -404,7 +415,8 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         configName = item.configName!!
                         profileConfigId = item.id
                         updateCallback = {
-                            it.isEnabled = true
+                            itView.isEnabled = true
+                            profileConfigsAdapter.refreshConfig(it)
                         }
                     }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                 }

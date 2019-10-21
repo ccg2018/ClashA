@@ -5,12 +5,14 @@ import android.os.Parcelable
 import androidx.room.*
 import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.github.cgg.clasha.data.LogMessage.Companion.formatter
 import kotlinx.android.parcel.Parcelize
 import org.json.JSONArray
 import org.json.JSONObject
 import org.yaml.snakeyaml.Yaml
 import java.io.FileInputStream
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -32,8 +34,8 @@ data class ProfileConfig constructor(
     var ruleItems: String? = "",
     var order: Long = 0,
     var origin: String? = "",
-    private var itemType: Int = 0
-
+    private var itemType: Int = 0,
+    var time: Long = 0
 
 ) : MultiItemEntity, Parcelable, Serializable {
     override fun getItemType(): Int {
@@ -43,6 +45,7 @@ data class ProfileConfig constructor(
     companion object {
 
         val DEFAULT = 0
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm")
 
         fun findProfileConfig(
             data: String?,
@@ -111,4 +114,10 @@ data class ProfileConfig constructor(
         put("Proxy Group", JSONArray(proxyGroupItems))
         put("Rule", JSONArray(ruleItems))
     }
+
+    fun getDateFormatted(): String {
+        return formatter.format(Date(time)).toString()
+    }
+
+
 }

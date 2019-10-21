@@ -27,6 +27,7 @@ object ConfigManager {
         config.id = 0
         config.order = PrivateDatabase.profileConfigDao.nextOrder() ?: 0
         config.id = PrivateDatabase.profileConfigDao.create(config)
+        config.time = System.currentTimeMillis()
         listener?.onAdd(config)
         return config
     }
