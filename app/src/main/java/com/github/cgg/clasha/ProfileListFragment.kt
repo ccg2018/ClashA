@@ -13,6 +13,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
@@ -35,6 +36,7 @@ import com.github.cgg.clasha.data.DataStore
 import com.github.cgg.clasha.data.ProfileConfig
 import com.github.cgg.clasha.utils.*
 import com.github.cgg.clasha.widget.ClashAWebviewBottomSheetDialog
+import com.github.cgg.clasha.widget.EditTextDialog
 import com.loveplusplus.update.UpdateChecker
 import me.rosuh.filepicker.bean.FileItemBeanImpl
 import me.rosuh.filepicker.config.AbstractFileFilter
@@ -440,7 +442,43 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                     //todo 切换config
                 }
             }
+
+            helper.getView<TextView>(android.R.id.text1).setOnClickListener {
+                val dialog = bindEditDialog(title = getString(R.string.title_edit_config_name),
+                    isMultiline = false,
+                    hasOnNeutral = false,
+                    onOk = { editText, tag ->
+                        if (!TextUtils.isEmpty(editText.text)) {
+                            val index = data.indexOfFirst { it.id == item.id }
+                            profileConfigsAdapter.data[index].configName = editText.text.toString()
+                            ConfigManager.updateProfileConfig(profileConfigsAdapter.data[index])
+                            refreshId(item.id)
+                        }
+                    })
+
+                dialog.show(fragmentManager ?: (activity as MainActivity).supportFragmentManager,
+                    "configName")
+            }
         }
+    }
+
+    private fun bindEditDialog(
+        title: String? = null,
+        hint: String? = null,
+        text: String? = null,
+        tag: String? = null,
+        isMultiline: Boolean = false,
+        hasOnNeutral: Boolean = false,
+        onOk: ((editText: EditText, tag: String) -> Unit)? = null,
+        onNeutral: ((editText: EditText, tag: String) -> Unit)? = null
+    ): EditTextDialog {
+        val dialog = EditTextDialog.newInstance(
+            title = title, hint = hint, text = text, tag = tag,
+            isMultiline = isMultiline, hasOnNeutral = hasOnNeutral
+        )
+        dialog.onOk = onOk
+        dialog.onNeutral = onNeutral
+        return dialog
     }
 
     private fun importLocalConfig() {

@@ -49,6 +49,7 @@
     <string name="dialog_delete">Delete</string>
 
     <string name="iterm_update_time">Updated: %s</string>
+    <string name="title_edit_config_name">Edit Config Name</string>
 
     <!-- permission-->
     <string name="permission_rationale_message">You have rejected us to apply for authorization, please agree to
