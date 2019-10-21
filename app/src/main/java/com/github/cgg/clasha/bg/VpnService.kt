@@ -81,7 +81,7 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
         }
     }
 
-    private inner class ProtectWorker : ConcurrentLocalSocketListener("ShadowsocksVpnThread",
+    private inner class ProtectWorker : ConcurrentLocalSocketListener("ClashVpnThread",
         File(app.deviceStorage.noBackupFilesDir, "protect_path")) {
         override fun acceptInternal(socket: LocalSocket) {
             socket.inputStream.read()

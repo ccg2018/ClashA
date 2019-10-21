@@ -113,14 +113,18 @@ object BaseService {
         }
 
         private fun broadcast(work: (IClashAServiceCallback) -> Unit) {
-            repeat(callbacks.beginBroadcast()) {
-                try {
-                    work(callbacks.getBroadcastItem(it))
-                } catch (e: Exception) {
-                    printLog(e)
+            val count = callbacks.beginBroadcast()
+            try {
+                repeat(count) {
+                    try {
+                        work(callbacks.getBroadcastItem(it))
+                    } catch (e: Exception) {
+                        printLog(e)
+                    }
                 }
+            } finally {
+                callbacks.finishBroadcast()
             }
-            callbacks.finishBroadcast()
         }
 
         private fun registerTimeout() {

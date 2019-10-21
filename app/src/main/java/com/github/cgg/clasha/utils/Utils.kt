@@ -1,5 +1,6 @@
 package com.github.cgg.clasha.utils
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.ContentResolver
 import android.content.Context
@@ -31,12 +32,11 @@ import java.util.*
 
 val Throwable.readableMessage get() = localizedMessage ?: javaClass.name
 
-private val parseNumericAddress by lazy {
+private val parseNumericAddress by lazy @SuppressLint("DiscouragedPrivateApi") {
     InetAddress::class.java.getDeclaredMethod("parseNumericAddress", String::class.java).apply {
         isAccessible = true
     }
 }
-
 /**
  * A slightly more performant variant of InetAddress.parseNumericAddress.
  *
