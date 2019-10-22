@@ -443,7 +443,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                 }
             }
 
-            helper.getView<TextView>(android.R.id.text1).setOnClickListener {
+            helper.itemView.setOnLongClickListener {
                 val dialog = bindEditDialog(title = getString(R.string.title_edit_config_name),
                     isMultiline = false,
                     hasOnNeutral = false,
@@ -458,6 +458,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
 
                 dialog.show(fragmentManager ?: (activity as MainActivity).supportFragmentManager,
                     "configName")
+                true
             }
         }
     }
