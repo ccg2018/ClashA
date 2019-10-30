@@ -106,7 +106,7 @@ object BaseService {
         private val handler = Handler()
 
         override fun getState(): Int = data!!.state.ordinal
-        override fun getProfileName(): String = "ClashA Temp"//data!!.proxy?.profile?.name ?: "Idle"
+        override fun getProfileName(): String = data!!.proxy?.profile?.configName ?: "Idle"
 
         override fun registerCallback(cb: IClashAServiceCallback) {
             callbacks.register(cb)

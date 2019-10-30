@@ -112,6 +112,4 @@ object Action {
     const val SERVICE = "com.github.ccg.clasha.SERVICE"
     const val CLOSE = "com.github.ccg.clasha.CLOSE"
     const val RELOAD = "com.github.ccg.clasha.RELOAD"
-
-    const val EXTRA_PROFILE_ID = "com.github.shadowsocks.EXTRA_PROFILE_ID"
 }
