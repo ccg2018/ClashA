@@ -29,12 +29,16 @@ import com.github.cgg.clasha.data.DataStore
 import com.github.cgg.clasha.data.OnPreferenceDataStoreChangeListener
 import com.github.cgg.clasha.utils.Key
 import com.github.cgg.clasha.utils.Key.isONKey
-import com.github.cgg.clasha.utils.isPortUsing
 import com.github.cgg.clasha.widget.EditTextDialog
 import com.github.cgg.clasha.widget.ServiceButton
 import com.google.android.material.navigation.NavigationView
 import com.yanzhenjie.andserver.AndServer
 import com.yanzhenjie.andserver.Server
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import org.json.JSONObject
 import java.lang.Exception
 import java.net.InetAddress
 import java.util.concurrent.TimeUnit
@@ -108,12 +112,12 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
         //stats.changeState(state)
         //if (msg != null) snackbar(getString(R.string.vpn_error).format(Locale.ENGLISH, msg)).show()
         LogUtils.i(TAG, "ChangeState - > $state, msg - > $msg, animate - > $animate")
+        setSelectorProxy(state)
         if (msg != null) ToastUtils.showShort(msg)
         this.state = state
         changeButtonState(state)
         //ProfilesFragment.instance?.profilesAdapter?.notifyDataSetChanged()  // refresh button enabled state
         stateListener?.invoke(state)
-
 
     }
 
@@ -126,6 +130,47 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
         }
         else -> {
         }
+    }
+
+    private fun setSelectorProxy(state: BaseService.State) = when {
+        state == BaseService.State.Connected -> {
+            app.mAppExecutors.networkIO.execute {
+                val mOkHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(400, TimeUnit.MILLISECONDS)
+                    .writeTimeout(500, TimeUnit.MILLISECONDS)
+                    .build()
+                val host = "http://127.0.0.1:${DataStore.portApi}"
+
+                val profile = app.currentProfileConfig
+                if (!TextUtils.isEmpty(profile?.selector)) {
+                    val jsonObj = JSONObject(profile?.selector)
+                    val iterator = jsonObj.keys().iterator()
+                    while (iterator.hasNext()) {
+                        val proxyName = iterator.next()
+                        val iterm = jsonObj.optJSONObject(proxyName)
+                        val nodeName = iterm.optString("now")
+                        val nodeNameJson = JSONObject().putOpt("name", nodeName)
+                        putRequest(mOkHttpClient, host, proxyName, nodeNameJson.toString())
+                    }
+                }
+
+                val request = Request.Builder().url("$host/proxies").get().build()
+                val call = mOkHttpClient.newCall(request)
+                val response = call.execute()
+                if ((response.isSuccessful)) {
+
+                }
+            }
+        }
+        else -> {
+        }
+    }
+
+    private fun putRequest(client: OkHttpClient, host: String, proxyName: String, nodeNameJSON: String) {
+        val JSON = MediaType.parse("application/json; charset=utf-8")
+        val body = RequestBody.create(JSON, nodeNameJSON)
+        val request = Request.Builder().url("$host/proxies/$proxyName").put(body).build()
+        client.newCall(request).execute()
     }
 
 

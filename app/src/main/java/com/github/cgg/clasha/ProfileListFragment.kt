@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.AsyncTask
@@ -45,6 +46,7 @@ import me.rosuh.filepicker.config.FilePickerManager
 import me.rosuh.filepicker.filetype.FileType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.net.URL
@@ -144,18 +146,55 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
+    fun getSelectProxys() {
+        app.mAppExecutors.networkIO.execute {
+            try {
+                val mOkHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(400, TimeUnit.MILLISECONDS)
+                    .readTimeout(3, TimeUnit.SECONDS)
+                    .build()
 
-    override fun onResume() {
-        super.onResume()
-    }
+                val host = "http://127.0.0.1:${DataStore.portApi}"
+                val request = Request.Builder().url("$host/proxies").get().build()
+                val call = mOkHttpClient.newCall(request)
+                val response = call.execute()
+                if (response.isSuccessful) {
+                    val result = response.body()?.string()
+                    val resultObj = JSONObject(result).optJSONObject("proxies")
+                    var endObj = JSONObject()
+                    //遍历
+                    val iterator = resultObj.keys().iterator()
+                    while (iterator.hasNext()) {
+                        val key = iterator.next()
+                        val iterm = resultObj.get(key) as JSONObject
+                        if (iterm.has("type")) {
+                            val type = iterm.optString("type")
+                            if ("Selector".equals(type)) {
+                                iterm.remove("all")
+                                iterm.remove("history")
+                                endObj.putOpt(key, iterm)
+                            }
+                        }
+                    }
 
+                    LogUtils.iTag("proxies", "筛选后的数据 ")
+                    LogUtils.json(endObj.toString())
+
+                    var profile = app.currentProfileConfig
+                    profile?.selector = endObj.toString()
+                    ConfigManager.updateProfileConfig(profile!!)
+                    //todo save db
+                } else {
+
+                }
+            } catch (e: Exception) {
+                LogUtils.e(e)
+            }
+        }
+    }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item?.itemId) {
-
             R.id.action_check_update -> {
                 UpdateChecker.checkForDialog(
                     context,
@@ -172,12 +211,16 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         dialog.setShowBackNav(false)
                         dialog.setPort(DataStore.portApi.toString())
                         dialog.loadUrl("http://127.0.0.1:8881/index.html")
-
-//                        dialog.loadUrl("file:///android_asset/yacd/index_0.35.html?port=${DataStore.portApi}#/proxies")
+                        dialog.setOnDismissListener(object : DialogInterface.OnDismissListener {
+                            override fun onDismiss(dialog: DialogInterface?) {
+                                getSelectProxys()
+                            }
+                        })
                         //dialog.loadUrl("http://clash.razord.top/")
                         dialog.show()
                         dialog.setMaxHeight(ScreenUtils.getScreenHeight())
                         dialog.setPeekHeight(ScreenUtils.getScreenHeight())
+
                     }
                     else -> ToastUtils.showShort(R.string.message_dashboard_please_startproxy)
                 }
@@ -454,8 +497,10 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         }
                     })
 
-                dialog.show(fragmentManager ?: (activity as MainActivity).supportFragmentManager,
-                    "configName")
+                dialog.show(
+                    fragmentManager ?: (activity as MainActivity).supportFragmentManager,
+                    "configName"
+                )
                 true
             }
         }

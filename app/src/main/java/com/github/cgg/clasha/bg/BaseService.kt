@@ -379,7 +379,6 @@ object BaseService {
             }
         }
 
-        /*----------*/
         fun isJSON(content: String?): Boolean {
             return try {
                 JSONObject(content)
@@ -388,7 +387,6 @@ object BaseService {
                 false
             }
         }
-        /*----------*/
 
         fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
             val data = data

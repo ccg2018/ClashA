@@ -35,6 +35,7 @@ data class ProfileConfig constructor(
     var order: Long = 0,
     var origin: String? = "",
     private var itemType: Int = 0,
+    var selector: String? = "",
     var time: Long = 0
 
 ) : MultiItemEntity, Parcelable, Serializable {
@@ -55,7 +56,6 @@ data class ProfileConfig constructor(
         ): ProfileConfig {
             var yaml = Yaml()
             var config = profileConfig ?: ProfileConfig()
-
 
             config.url = url
             config.configName = configName
