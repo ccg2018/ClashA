@@ -21,6 +21,10 @@
             android:key="allowLan"
             android:title="@string/allow_lan"/>
 
+    <SwitchPreferenceCompat
+            android:key="ipv6Enable"
+            android:title="@string/ipv6Enable"/>
+
     <SimpleMenuPreference
             android:key="serviceMode"
             android:entries="@array/service_modes"

@@ -99,6 +99,7 @@
     <string name="dns_custom_nameserver">Dns Custom(nameserver)</string>
     <string name="dns_custom_fallback">Dns Custom(fallback)</string>
     <string name="allow_lan">Allow Lan</string>
+    <string name="ipv6Enable">IPV6 Enable</string>
 
 
     <!-- alert category -->

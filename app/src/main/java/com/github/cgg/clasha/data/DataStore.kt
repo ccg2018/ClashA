@@ -104,6 +104,10 @@ object DataStore {
         get() = publicStore.getBoolean(Key.allowLan, false)
         set(value) = publicStore.putBoolean(Key.allowLan, value)
 
+    var ipv6Enable: Boolean
+        get() = publicStore.getBoolean(Key.ipv6, false)
+        set(value) = publicStore.putBoolean(Key.ipv6, false)
+
 
     /**
      * Initialize settings that have complicated default values.

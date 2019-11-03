@@ -84,7 +84,7 @@ object Key {
     const val proxyApps = "isProxyApps"
     const val bypass = "isBypassApps"
     const val udpdns = "isUdpDns"
-    const val ipv6 = "isIpv6"
+    const val ipv6 = "ipv6Enable"
 
     const val host = "proxy"
     const val password = "sitekey"

@@ -14,6 +14,7 @@ import com.github.cgg.clasha.utils.Key
 import com.github.cgg.clasha.utils.getGson
 import com.github.cgg.clasha.widget.EditTextDialog
 import com.takisoft.preferencex.PreferenceFragmentCompat
+import kotlinx.android.synthetic.main.layout_main.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -33,6 +34,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
 
         val allowLan = findPreference(Key.allowLan)
+        val ipv6Enable = findPreference(Key.ipv6)
         val portApi = findPreference(Key.portApi)
         val serviceMode = findPreference(Key.serviceMode)
         val portHttpProxy = findPreference(Key.portHttpProxy)
@@ -58,6 +60,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 portProxy.isEnabled = true
                 portLocalDns.isEnabled = true
                 allowLan.isEnabled = true
+                ipv6Enable.isEnabled = true
                 portApi.isEnabled = true
                 clashLoglevel.isEnabled = true
                 dnsMode.isEnabled = true
@@ -67,6 +70,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 portProxy.isEnabled = false
                 portLocalDns.isEnabled = false
                 allowLan.isEnabled = false
+                ipv6Enable.isEnabled = false
                 portApi.isEnabled = false
                 clashLoglevel.isEnabled = false
                 dnsMode.isEnabled = false
@@ -75,7 +79,6 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
         portLocalDns.onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
             override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
-                LogUtils.w("DNS new port: $newValue")
                 val dnsJSONobject = JSONObject(DataStore.dnsConfig)
                 dnsJSONobject.put("listen", if (DataStore.allowLan) "0.0.0.0:$newValue" else "127.0.0.1:$newValue")
                 DataStore.dnsConfig = dnsJSONobject.toString()
@@ -88,9 +91,18 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 val dnsJSONObject = JSONObject(DataStore.dnsConfig)
                 dnsJSONObject.put("enhanced-mode", newValue)
                 DataStore.dnsConfig = dnsJSONObject.toString()
-                LogUtils.json(LogUtils.W, dnsJSONObject)
                 return true
             }
+        }
+
+        ipv6Enable.onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
+            override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
+                val dnsJSONobject = JSONObject(DataStore.dnsConfig)
+                dnsJSONobject.put("ipv6",newValue)
+                DataStore.dnsConfig = dnsJSONobject.toString()
+                return true
+            }
+
         }
 
         listener((activity as MainActivity).state)

@@ -165,10 +165,14 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
             .setSession(BaseService.tempformattedName)
             .setMtu(VPN_MTU)
             .addAddress(PRIVATE_VLAN4_CLIENT, 30)
-        builder.addRoute("0.0.0.0", 0)
-        builder.addAddress(PRIVATE_VLAN6_CLIENT, 126)
-        builder.addRoute("::", 0)
-        builder.addDnsServer(PRIVATE_VLAN4_ROUTER)
+            .addRoute("0.0.0.0", 0)
+            .addDnsServer(PRIVATE_VLAN4_ROUTER)
+
+        if (DataStore.ipv6Enable) {
+            builder.addAddress(PRIVATE_VLAN6_CLIENT, 126)
+            builder.addRoute("::", 0)
+        }
+
 
         //bypass us
         builder.addDisallowedApplication(packageName)
@@ -187,14 +191,15 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
             "--socks-server-addr", "127.0.0.1:${DataStore.portProxy}",
             "--tunmtu", VPN_MTU.toString(),
             "--sock-path", "sock_path",
+            "--dnsgw", "127.0.0.1:${DataStore.portLocalDns}",
             "--loglevel", "warning"
         )
-
-        cmd += "--netif-ip6addr"
-        cmd += PRIVATE_VLAN6_ROUTER
+        if (DataStore.ipv6Enable) {
+            cmd += "--netif-ip6addr"
+            cmd += PRIVATE_VLAN6_ROUTER
+        }
         cmd += "--enable-udprelay"
-        cmd += "--dnsgw"
-        cmd += "127.0.0.1:${DataStore.portLocalDns}"
+
         data.processes!!.start(cmd, onRestartCallback = {
             try {
                 sendFd(conn.fileDescriptor)
