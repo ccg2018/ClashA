@@ -350,7 +350,6 @@ object BaseService {
                 var contentLine: String?
                 do {
                     contentLine = br.readLine()
-                    LogUtils.eTag(TAG, "okhttp: $contentLine")
                     if (isJSON(contentLine)) {
                         val jsonObject = JSONObject(contentLine)
                         val payload = jsonObject.optString("payload")

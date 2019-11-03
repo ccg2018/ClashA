@@ -42,9 +42,6 @@ import android.net.VpnService as BaseVpnService
 class VpnService : BaseVpnService(), LocalDnsService.Interface {
     companion object {
         private const val VPN_MTU = 1500
-        private const val PRIVATE_VLAN = "172.19.0.%s"
-        private const val PRIVATE_VLAN6 = "fdfe:dcba:9876::%s"
-
         private const val PRIVATE_VLAN4_CLIENT = "172.19.0.1"
         private const val PRIVATE_VLAN4_ROUTER = "172.19.0.2"
         private const val PRIVATE_VLAN6_CLIENT = "fdfe:dcba:9876::1"
@@ -81,8 +78,10 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
         }
     }
 
-    private inner class ProtectWorker : ConcurrentLocalSocketListener("ClashVpnThread",
-        File(app.deviceStorage.noBackupFilesDir, "protect_path")) {
+    private inner class ProtectWorker : ConcurrentLocalSocketListener(
+        "ClashVpnThread",
+        File(app.deviceStorage.noBackupFilesDir, "protect_path")
+    ) {
         override fun acceptInternal(socket: LocalSocket) {
             socket.inputStream.read()
             val fd = socket.ancillaryFileDescriptors!!.single()!!
@@ -147,6 +146,7 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
         stopRunner(true)
         return Service.START_NOT_STICKY
     }
+
     override suspend fun preInit() = DefaultNetworkListener.start(this) { underlyingNetwork = it }
     override suspend fun resolver(host: String) = DefaultNetworkListener.get().getAllByName(host)
     override suspend fun openConnection(url: URL) = DefaultNetworkListener.get().openConnection(url)
@@ -164,12 +164,11 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
             .setConfigureIntent(MainActivity.pendingIntent(this))
             .setSession(BaseService.tempformattedName)
             .setMtu(VPN_MTU)
-            .addAddress(PRIVATE_VLAN.format(Locale.ENGLISH, "1"), 24)
-
-        builder.addAddress(PRIVATE_VLAN6.format(Locale.ENGLISH, "1"), 126)
+            .addAddress(PRIVATE_VLAN4_CLIENT, 30)
+        builder.addRoute("0.0.0.0", 0)
+        builder.addAddress(PRIVATE_VLAN6_CLIENT, 126)
         builder.addRoute("::", 0)
-
-        builder.addDnsServer("8.8.8.8")
+        builder.addDnsServer(PRIVATE_VLAN4_ROUTER)
 
         //bypass us
         builder.addDisallowedApplication(packageName)
@@ -177,7 +176,6 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
 
         //todo APP bypass
 
-        builder.addRoute("0.0.0.0", 0)
         val conn = builder.establish() ?: throw NullConnectionException()
         this.conn = conn
         val fd = conn.fd
@@ -185,18 +183,15 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
 
         val cmd = arrayListOf(
             File(applicationInfo.nativeLibraryDir, Executable.TUN2SOCKS).absolutePath,
-            "--netif-ipaddr", PRIVATE_VLAN.format(Locale.ENGLISH, "2"),
-            "--netif-netmask", "255.255.255.0",
+            "--netif-ipaddr", PRIVATE_VLAN4_ROUTER,
             "--socks-server-addr", "127.0.0.1:${DataStore.portProxy}",
-            "--tunfd", fd.toString(),
             "--tunmtu", VPN_MTU.toString(),
             "--sock-path", "sock_path",
-            "--loglevel", "4"
+            "--loglevel", "warning"
         )
 
         cmd += "--netif-ip6addr"
-        cmd += PRIVATE_VLAN6.format(Locale.ENGLISH, "2")
-
+        cmd += PRIVATE_VLAN6_ROUTER
         cmd += "--enable-udprelay"
         cmd += "--dnsgw"
         cmd += "127.0.0.1:${DataStore.portLocalDns}"

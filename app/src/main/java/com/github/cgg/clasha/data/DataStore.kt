@@ -96,7 +96,7 @@ object DataStore {
     var dnsConfig: String
         get() = publicStore.getString(
             Key.dnsConfig,
-            "{\"nameserver\":[\"tls://dns.rubyfish.cn:853\",\"114.114.114.114\"],\"enhanced-mode\":\"redir-host\",\"fallback\":[\"tls://dns.rubyfish.cn:853\",\"tls://dns.google\"],\"enable\":true,\"ipv6\":false,\"listen\":\"0.0.0.0:5450\"}"
+            "{\"nameserver\":[\"tcp://114.115.240.175:9090\",\"tls://114.115.240.175:853\",\"tcp://47.101.136.37:9090\",\"tls://47.101.136.37:853\",\"tcp://119.29.107.85:9090\",\"tls://119.29.107.85:853\",\"tcp://118.24.208.197:9090\",\"tls://118.24.208.197:853\",\"tcp://139.196.72.143:53\",\"tcp://119.29.29.29:53\"],\"enhanced-mode\":\"redir-host\",\"fallback\":[\"tcp://1.0.0.1:53\",\"tcp://208.67.220.220:5353\",\"tls://1.0.0.1:853\"],\"enable\":true,\"ipv6\":false,\"listen\":\"0.0.0.0:5450\"}"
         )!!
         set(value) = publicStore.putString(Key.dnsConfig, value.toString())
 
