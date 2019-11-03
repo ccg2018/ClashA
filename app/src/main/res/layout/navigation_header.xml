@@ -5,21 +5,24 @@
                 android:theme="@style/ThemeOverlay.AppCompat.Dark"
                 android:background="@color/colorPrimary"
                 android:layout_height="100dp">
-    <!--<ImageView android:layout_width="match_parent"-->
-               <!--android:layout_height="wrap_content"-->
-               <!--android:orientation="vertical"-->
-               <!--android:adjustViewBounds="true"-->
-               <!--android:scaleType="centerCrop"-->
-               <!--android:src="@drawable/background_header"/>-->
 
-    <!--<TextView android:id="@+id/drawer_title"-->
-              <!--android:layout_width="match_parent"-->
-              <!--android:layout_height="wrap_content"-->
-              <!--android:layout_centerVertical="true"-->
-              <!--android:fontFamily="@font/iceland"-->
-              <!--android:gravity="center"-->
-              <!--android:text="shadowsocks"-->
-              <!--android:textColor="@android:color/white"-->
-              <!--android:textSize="32sp"-->
-              <!--tools:ignore="HardcodedText"/>-->
+
+    <TextView android:id="@+id/drawer_title"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:gravity="center"
+              android:text="ClashA"
+              android:textColor="@android:color/white"
+              android:textSize="32sp"
+              tools:ignore="HardcodedText"/>
+
+    <TextView android:id="@+id/drawer_version"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:layout_below="@id/drawer_title"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 </RelativeLayout>

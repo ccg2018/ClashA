@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -157,6 +158,9 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
 
         drawer = findViewById(R.id.drawer)
         navigation = findViewById(R.id.navigation)
+        val header = navigation.getHeaderView(0)
+        val drawer_version = header.findViewById<TextView>(R.id.drawer_version)
+        drawer_version.text = BuildConfig.VERSION_NAME
         navigation.setNavigationItemSelectedListener(this)
         fab = findViewById(R.id.fab)
         fab.setOnClickListener {

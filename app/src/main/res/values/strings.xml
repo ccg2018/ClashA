@@ -43,7 +43,7 @@
 
     <!-- UI -->
     <string name="global_settings">Global Settings</string>
-    <string name="logs_view">Logs View</string>
+    <string name="logs_view">Log View</string>
     <string name="profile_config">Profile Config</string>
     <string name="profile_name">Profile Name</string>
     <string name="dialog_delete">Delete</string>

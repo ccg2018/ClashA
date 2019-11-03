@@ -10,8 +10,10 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-    >
+            android:layout_marginLeft="@dimen/layout_8dp"
+            android:layout_marginRight="@dimen/layout_8dp"
+            android:layout_marginTop="@dimen/layout_8dp"
+            android:layout_marginBottom="@dimen/layout_4dp">
         <RelativeLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content">
             <!---->
@@ -34,7 +36,7 @@
         </RelativeLayout>
 
         <TextView
-                android:layout_marginTop="@dimen/layout_16dp"
+                android:layout_marginTop="@dimen/layout_4dp"
                 style="@style/ClashALogItemTextView.title"
                 android:layout_width="match_parent"
                 android:text='@{"["+ logmsg.logType + "]" }'
@@ -44,8 +46,9 @@
                   android:hint="Null"
                   android:text='@{"" + logmsg.content}'
                   style="@style/ClashALogItemTextView.Content"
-                  android:layout_marginBottom="@dimen/layout_16dp"
+                  android:layout_marginBottom="@dimen/layout_4dp"
                   android:layout_height="wrap_content"/>
+
         <!--android:visibility="@{logmsg.isOtherType? View.GONE: View.VISIBLE}"-->
     </LinearLayout>
 </layout>
