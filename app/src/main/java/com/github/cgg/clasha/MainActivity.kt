@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
         private const val TAG = "ClashAMainActivity"
         private const val REQUEST_CONNECT = 1
 
-
         var stateListener: ((BaseService.State) -> Unit)? = null
         fun pendingIntent(context: Context) = PendingIntent.getActivity(
             context, 0,
@@ -214,7 +213,7 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
 
         if (savedInstanceState == null) {
             navigation.menu.findItem(R.id.profileConfig).isChecked = true
-            FragmentUtils.replace(
+            FragmentUtils.add(
                 supportFragmentManager,
                 ProfileListFragment(),
                 R.id.fragment
@@ -242,11 +241,9 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
         if (item.isChecked) drawer.closeDrawers() else {
             when (item.itemId) {
                 R.id.profileConfig -> {
-                    FragmentUtils.replace(
-                        supportFragmentManager,
-                        ProfileListFragment(),
-                        R.id.fragment
-                    )
+                    var findFragment =
+                        FragmentUtils.findFragment(supportFragmentManager, ProfileListFragment::class.java)
+                    FragmentUtils.replace(supportFragmentManager, findFragment ?: ProfileListFragment(), R.id.fragment)
                 }
                 R.id.globalSettings -> {
                     FragmentUtils.replace(
@@ -276,19 +273,15 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
 
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawers() else {
-
-            val top = FragmentUtils.getTop(supportFragmentManager)
-            LogUtils.wTag(TAG, top)
-            if (top !is ProfileListFragment) {
-                FragmentUtils.replace(
-                    supportFragmentManager,
-                    ProfileListFragment(),
-                    R.id.fragment
-                )
+            if (!navigation.menu.findItem(R.id.profileConfig).isChecked) {
+                var findFragment =
+                    FragmentUtils.findFragment(supportFragmentManager, ProfileListFragment::class.java)
+                FragmentUtils.replace(supportFragmentManager, findFragment ?: ProfileListFragment(), R.id.fragment)
                 navigation.menu.findItem(R.id.profileConfig).isChecked = true
-            } else {
+            }else{
                 super.onBackPressed()
             }
+
         }
     }
 

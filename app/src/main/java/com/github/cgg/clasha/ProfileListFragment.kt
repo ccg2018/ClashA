@@ -63,7 +63,7 @@ import java.util.concurrent.TimeUnit
 class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
     FragmentUtils.OnBackClickListener {
     override fun onBackClick(): Boolean {
-        return true
+        return false
     }
 
     companion object {
