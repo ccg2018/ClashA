@@ -5,29 +5,26 @@
             android:orderInCategory="91"
             android:title="@string/title_check_update"
             app:showAsAction="never"
-            android:id="@+id/action_check_update"
-    />
+            android:visible="false"
+            android:id="@+id/action_check_update"/>
 
     <item
             android:orderInCategory="1"
             android:title="@string/title_dashboard"
             app:showAsAction="always"
-            android:id="@+id/action_dashboard"
-    />
+            android:id="@+id/action_dashboard"/>
 
     <item
             android:orderInCategory="92"
             android:title="@string/title_import_config"
             app:showAsAction="never"
-            android:id="@+id/action_import_config"
-    />
+            android:id="@+id/action_import_config"/>
 
     <item
             android:orderInCategory="93"
             android:title="@string/title_subscibe_config"
             app:showAsAction="never"
-            android:id="@+id/action_download_config"
-    />
+            android:id="@+id/action_download_config"/>
 
 
     <!--TEMP-->
@@ -37,6 +34,5 @@
             android:title="fix Country.mmdb"
             android:orderInCategory="200"
             app:showAsAction="never"
-            android:visible="true"
-    />
+            android:visible="true"/>
 </menu>
