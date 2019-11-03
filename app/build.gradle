@@ -40,8 +40,8 @@ android {
         applicationId "com.github.ccg.clasha"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.sdkVersion
-        versionCode 15
-        versionName "0.0.2"
+        versionCode 16
+        versionName "0.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -175,6 +175,7 @@ dependencies {
     releaseImplementation 'com.github.whataa:pandora-no-op:v1.3.2'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
     implementation 'com.blankj:utilcodex:1.25.9'
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     testImplementation group: 'org.json', name: 'json', version: '20170516'
     // DEBUG END
