@@ -13,9 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadService extends IntentService {
-    // 10-10 19:14:32.618: D/DownloadService(1926): 测试缓存：41234 32kb
-    // 10-10 19:16:10.892: D/DownloadService(2069): 测试缓存：41170 1kb
-    // 10-10 19:18:21.352: D/DownloadService(2253): 测试缓存：39899 10kb
     private static final int BUFFER_SIZE = 10 * 1024; // 8k ~ 32K
     private static final String TAG = "DownloadService";
 
@@ -54,9 +51,7 @@ public class DownloadService extends IntentService {
             File apkFile = new File(dir, apkName);
             out = new FileOutputStream(apkFile);
             byte[] buffer = new byte[BUFFER_SIZE];
-
             int oldProgress = 0;
-
             while ((byteread = in.read(buffer)) != -1) {
                 bytesum += byteread;
                 out.write(buffer, 0, byteread);

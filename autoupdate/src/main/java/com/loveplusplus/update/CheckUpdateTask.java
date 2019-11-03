@@ -172,7 +172,7 @@ class CheckUpdateTask extends AsyncTask<Void, Void, Map<String, String>> {
             final String githubApi = obj.optString(APK_DOWNLOAD_API);
             final String githubResult = HttpUtils.get(githubApi);
             data.put(APK_GITHUB_RESULT, githubResult);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getLocalizedMessage(), e);
         }
 
