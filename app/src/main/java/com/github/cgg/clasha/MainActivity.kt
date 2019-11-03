@@ -28,6 +28,7 @@ import com.github.cgg.clasha.data.DataStore
 import com.github.cgg.clasha.data.OnPreferenceDataStoreChangeListener
 import com.github.cgg.clasha.utils.Key
 import com.github.cgg.clasha.utils.Key.isONKey
+import com.github.cgg.clasha.utils.isPortUsing
 import com.github.cgg.clasha.widget.EditTextDialog
 import com.github.cgg.clasha.widget.ServiceButton
 import com.google.android.material.navigation.NavigationView
@@ -407,26 +408,31 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
 
 
     private fun initHttpServer() {
-        server = AndServer.serverBuilder(this)
-            .inetAddress(InetAddress.getByName("127.0.0.1"))
-            .port(65535)
-            .timeout(5, TimeUnit.SECONDS)
-            .listener(object : Server.ServerListener {
-                override fun onException(e: Exception?) {
-                    LogUtils.iTag(TAG, e)
-                }
+        app.mAppExecutors.diskIO.execute {
+            val host = "0.0.0.0"
+            var port = 8881
 
-                override fun onStarted() {
-                    LogUtils.iTag(TAG, "HTTP server started")
-                }
+            server = AndServer.serverBuilder(this)
+                .inetAddress(InetAddress.getByName(host))
+                .port(port)
+                .timeout(5, TimeUnit.SECONDS)
+                .listener(object : Server.ServerListener {
+                    override fun onException(e: Exception?) {
+                        LogUtils.iTag(TAG, e)
+                    }
 
-                override fun onStopped() {
-                    LogUtils.iTag(TAG, "HTTP server Stopped")
-                }
+                    override fun onStarted() {
+                        LogUtils.iTag(TAG, "HTTP server started")
+                    }
 
-            })
-            .build()
-        server?.startup()
+                    override fun onStopped() {
+                        LogUtils.iTag(TAG, "HTTP server Stopped")
+                    }
+
+                })
+                .build()
+            server?.startup()
+        }
     }
 
     private fun stopHttpServer() {

@@ -146,12 +146,10 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
 
     override fun onStart() {
         super.onStart()
-        LogUtils.iTag("ProfileFragment", "onStart")
     }
 
     override fun onResume() {
         super.onResume()
-        LogUtils.iTag("ProfileFragment", "onResume")
     }
 
 
@@ -173,7 +171,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         dialog.setCanBack(false)
                         dialog.setShowBackNav(false)
                         dialog.setPort(DataStore.portApi.toString())
-                        dialog.loadUrl("http://127.0.0.1:65535/index.html")
+                        dialog.loadUrl("http://127.0.0.1:8881/index.html")
 
 //                        dialog.loadUrl("file:///android_asset/yacd/index_0.35.html?port=${DataStore.portApi}#/proxies")
                         //dialog.loadUrl("http://clash.razord.top/")

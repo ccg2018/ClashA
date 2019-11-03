@@ -26,6 +26,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.lang.reflect.Type
 import java.net.InetAddress
+import java.net.Socket
 import java.net.URLConnection
 import java.util.*
 
@@ -37,6 +38,7 @@ private val parseNumericAddress by lazy @SuppressLint("DiscouragedPrivateApi") {
         isAccessible = true
     }
 }
+
 /**
  * A slightly more performant variant of InetAddress.parseNumericAddress.
  *
@@ -91,6 +93,20 @@ val Intent.datas get() = listOfNotNull(data) + (clipData?.asIterable()?.mapNotNu
 
 fun printLog(t: Throwable) {
     t.printStackTrace()
+}
+
+fun isPortUsing(host: String, port: Int): Boolean {
+
+    var flag = false
+    val address = InetAddress.getByName(host)
+    try {
+        val socket = Socket(address, port)
+        flag = true
+        socket.close()
+    } catch (e: Exception) {
+        LogUtils.e(e)
+    }
+    return flag
 }
 
 fun loadPortFromConfig(value: Any?) {

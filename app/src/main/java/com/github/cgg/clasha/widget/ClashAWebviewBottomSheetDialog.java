@@ -18,6 +18,8 @@ import android.webkit.WebSettings.ZoomDensity;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import com.blankj.utilcode.util.LogUtils;
+import com.github.cgg.clasha.BuildConfig;
 import com.github.cgg.clasha.R;
 
 /**
@@ -121,8 +123,8 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
         //默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
-//        settings.setAllowFileAccessFromFileURLs(true);
-//        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
         //Disable zoom
         settings.setSupportZoom(true);
         //提高渲染优先级
@@ -143,7 +145,9 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
         settings.setDisplayZoomControls(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            if (BuildConfig.DEBUG) {
+                settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {//这个版本之后 被默认禁止
@@ -153,6 +157,12 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
+
+        //允许iframe与外部域名不一致的时候出现的 请求丢失cookie
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(mWebview, true);
+        }
+
     }
 
 
@@ -162,6 +172,8 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            loadJS("window.localStorage.setItem('" + "externalControllerHost" + "','" + "127.0.0.1" + "');");
+            loadJS("window.localStorage.setItem('" + "externalControllerPort" + "','" + port + "');");
             Uri url = request.getUrl();
             if (url != null) {
                 view.loadUrl(url.toString());
@@ -187,6 +199,13 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
                 mProgress.setVisibility(View.GONE);
             }
         }
+
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            LogUtils.e("WebView error: " + errorCode + " + " + description);
+
+        }
+
     };
 
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
@@ -201,6 +220,14 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
                     mProgress.setVisibility(View.GONE);
                 }
             }
+        }
+
+        @Override
+        public boolean onConsoleMessage(ConsoleMessage cm) {
+            LogUtils.i(cm.message() + " -- From line "
+                    + cm.lineNumber() + " of "
+                    + cm.sourceId());
+            return true;
         }
     };
 
