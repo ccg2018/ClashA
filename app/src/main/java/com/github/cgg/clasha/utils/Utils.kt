@@ -132,7 +132,6 @@ fun loadPortFromConfig(value: Any?) {
 
     } catch (e: Exception) {
         //xiaomi xposed crash
-        Crashlytics.logException(e)
         Crashlytics.log(Log.ERROR, App.TAG, e.localizedMessage)
     }
 }

@@ -176,16 +176,13 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                             }
                         }
                     }
-
                     LogUtils.iTag("proxies", "筛选后的数据 ")
                     LogUtils.json(endObj.toString())
 
                     var profile = app.currentProfileConfig
                     profile?.selector = endObj.toString()
                     ConfigManager.updateProfileConfig(profile!!)
-                    //todo save db
                 } else {
-
                 }
             } catch (e: Exception) {
                 LogUtils.e(e)
@@ -343,7 +340,6 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
             } catch (e: Exception) {
                 ToastUtils.showShort(R.string.message_download_config_fail)
                 LogUtils.w(TAG, e)
-                Crashlytics.logException(e)
                 Crashlytics.log(Log.ERROR, TAG, e.localizedMessage)
                 ""
             }
@@ -377,7 +373,6 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                     Crashlytics.log(Log.INFO, TAG, mContext?.getString(R.string.message_download_config_success))
                 } catch (e: Exception) {
                     ToastUtils.showShort(R.string.message_download_config_fail)
-                    Crashlytics.logException(e)
                     Crashlytics.setString("Download debug result", result)
                 }
             }
@@ -596,13 +591,11 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                             )
                         } catch (e: IOException) {
                             ToastUtils.showShort(R.string.message_import_config_fail)
-                            Crashlytics.logException(e)
                             Crashlytics.log(Log.ERROR, TAG, e.localizedMessage)
                         } catch (e: java.lang.RuntimeException) {
                             //yml content format error
                             e.printStackTrace()
                             ToastUtils.showLong("${getString(R.string.message_import_config_fail)}, ${e.localizedMessage}")
-                            Crashlytics.logException(e)
                             Crashlytics.log(Log.ERROR, TAG, e.localizedMessage)
                         }
                     } else {
