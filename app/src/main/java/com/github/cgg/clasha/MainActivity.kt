@@ -134,30 +134,34 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
     private fun setSelectorProxy(state: BaseService.State) = when {
         state == BaseService.State.Connected -> {
             app.mAppExecutors.networkIO.execute {
-                val mOkHttpClient = OkHttpClient.Builder()
-                    .connectTimeout(400, TimeUnit.MILLISECONDS)
-                    .writeTimeout(500, TimeUnit.MILLISECONDS)
-                    .build()
-                val host = "http://127.0.0.1:${DataStore.portApi}"
+                try {
+                    val mOkHttpClient = OkHttpClient.Builder()
+                        .connectTimeout(400, TimeUnit.MILLISECONDS)
+                        .writeTimeout(500, TimeUnit.MILLISECONDS)
+                        .build()
+                    val host = "http://127.0.0.1:${DataStore.portApi}"
 
-                val profile = app.currentProfileConfig
-                if (!TextUtils.isEmpty(profile?.selector)) {
-                    val jsonObj = JSONObject(profile?.selector)
-                    val iterator = jsonObj.keys().iterator()
-                    while (iterator.hasNext()) {
-                        val proxyName = iterator.next()
-                        val iterm = jsonObj.optJSONObject(proxyName)
-                        val nodeName = iterm.optString("now")
-                        val nodeNameJson = JSONObject().putOpt("name", nodeName)
-                        putRequest(mOkHttpClient, host, proxyName, nodeNameJson.toString())
+                    val profile = app.currentProfileConfig
+                    if (!TextUtils.isEmpty(profile?.selector)) {
+                        val jsonObj = JSONObject(profile?.selector)
+                        val iterator = jsonObj.keys().iterator()
+                        while (iterator.hasNext()) {
+                            val proxyName = iterator.next()
+                            val iterm = jsonObj.optJSONObject(proxyName)
+                            val nodeName = iterm.optString("now")
+                            val nodeNameJson = JSONObject().putOpt("name", nodeName)
+                            putRequest(mOkHttpClient, host, proxyName, nodeNameJson.toString())
+                        }
                     }
-                }
 
-                val request = Request.Builder().url("$host/proxies").get().build()
-                val call = mOkHttpClient.newCall(request)
-                val response = call.execute()
-                if ((response.isSuccessful)) {
+                    val request = Request.Builder().url("$host/proxies").get().build()
+                    val call = mOkHttpClient.newCall(request)
+                    val response = call.execute()
+                    if ((response.isSuccessful)) {
 
+                    }
+                } catch (e: Exception) {
+                    LogUtils.e(e)
                 }
             }
         }

@@ -79,7 +79,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
     private lateinit var mItemDragAndSwipeCallback: ItemDragAndSwipeCallback
     private lateinit var mItemTouchHelper: ItemTouchHelper
     private lateinit var snackBarRootView: View
-
+    private val saveInformationCallback = DialogInterface.OnDismissListener { getSelectProxys() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.layout_fr_main, container, false)
@@ -136,6 +136,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                     dialog.setShowBackNav(false)
                     dialog.setPort(DataStore.portApi.toString())
                     dialog.loadUrl("http://clash.razord.top/")
+                    dialog.setOnDismissListener(saveInformationCallback)
                     dialog.show()
                     dialog.setMaxHeight(ScreenUtils.getScreenHeight())
                     dialog.setPeekHeight(ScreenUtils.getScreenHeight())
@@ -208,11 +209,8 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         dialog.setShowBackNav(false)
                         dialog.setPort(DataStore.portApi.toString())
                         dialog.loadUrl("http://127.0.0.1:8881/index.html")
-                        dialog.setOnDismissListener(object : DialogInterface.OnDismissListener {
-                            override fun onDismiss(dialog: DialogInterface?) {
-                                getSelectProxys()
-                            }
-                        })
+
+                        dialog.setOnDismissListener(saveInformationCallback)
                         //dialog.loadUrl("http://clash.razord.top/")
                         dialog.show()
                         dialog.setMaxHeight(ScreenUtils.getScreenHeight())
