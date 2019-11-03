@@ -7,8 +7,8 @@
     <!-- APP -->
     <string name="title_check_update">Check Update</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_subscibe_config">Subscibe Config</string>
-    <string name="title_import_config">Import config</string>
+    <string name="title_subscibe_config">Download Config</string>
+    <string name="title_import_config">Import Config</string>
     <string name="title_remove_all_logs">Remove All Logs</string>
 
 
