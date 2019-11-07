@@ -30,11 +30,11 @@
     <string name="profile_invalid_input">No valid profile data found.</string>
 
     <!-- config -->
-    <string name="download_config">Download Config.yml</string>
+    <string name="download_config">Download Config.yaml</string>
     <string name="message_download_config_success">Download success</string>
     <string name="message_download_config_fail">Download fail</string>
     <string name="message_download_url_legal">Download url illegal</string>
-    <string name="message_download_config_progress">Config.yml is Downloading</string>
+    <string name="message_download_config_progress">Config.yaml is Downloading</string>
     <string name="message_import_config_success">Import success</string>
     <string name="message_import_config_fail">Import fail</string>
     <string name="message_import_config_none">Import file is none</string>

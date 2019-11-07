@@ -570,7 +570,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
             REQUEST_IMPORT -> {
                 val list = FilePickerManager.obtainData()
                 val path = list[0]
-                LogUtils.d("import config.yml -> $path")
+                LogUtils.d("import config.yaml -> $path")
                 if (!TextUtils.isEmpty(path)) {
                     val file = File(path!!)
                     if (file.exists()) {

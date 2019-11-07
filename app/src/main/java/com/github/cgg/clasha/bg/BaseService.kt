@@ -280,7 +280,7 @@ object BaseService {
             data.proxy!!.start(
                 this,
                 File(app.deviceStorage.noBackupFilesDir, "stat_main"),
-                File(configRoot, "config.yml"),
+                File(configRoot, "config.yaml"),
                 null
             )
 
