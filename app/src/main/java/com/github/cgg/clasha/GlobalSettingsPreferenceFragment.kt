@@ -13,7 +13,10 @@ import com.github.cgg.clasha.data.DataStore
 import com.github.cgg.clasha.utils.Key
 import com.github.cgg.clasha.utils.getGson
 import com.github.cgg.clasha.widget.EditTextDialog
+import com.takisoft.preferencex.AutoSummaryEditTextPreference
 import com.takisoft.preferencex.PreferenceFragmentCompat
+import com.takisoft.preferencex.SimpleMenuPreference
+import com.takisoft.preferencex.SwitchPreferenceCompat
 import kotlinx.android.synthetic.main.layout_main.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -33,15 +36,15 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
         addPreferencesFromResource(R.xml.pref_global)
 
 
-        val allowLan = findPreference(Key.allowLan)
-        val ipv6Enable = findPreference(Key.ipv6)
-        val portApi = findPreference(Key.portApi)
-        val serviceMode = findPreference(Key.serviceMode)
-        val portHttpProxy = findPreference(Key.portHttpProxy)
-        val portProxy = findPreference(Key.portProxy)
-        val portLocalDns = findPreference(Key.portLocalDns)
-        val dnsMode = findPreference(Key.dnsMode)
-        val clashLoglevel = findPreference(Key.clashLoglevel)
+        val allowLan = findPreference<SwitchPreferenceCompat>(Key.allowLan)
+        val ipv6Enable = findPreference<SwitchPreferenceCompat>(Key.ipv6)
+        val portApi = findPreference<AutoSummaryEditTextPreference>(Key.portApi)
+        val serviceMode = findPreference<SimpleMenuPreference>(Key.serviceMode)
+        val portHttpProxy = findPreference<AutoSummaryEditTextPreference>(Key.portHttpProxy)
+        val portProxy = findPreference<AutoSummaryEditTextPreference>(Key.portProxy)
+        val portLocalDns = findPreference<AutoSummaryEditTextPreference>(Key.portLocalDns)
+        val dnsMode = findPreference<SimpleMenuPreference>(Key.dnsMode)
+        val clashLoglevel = findPreference<SimpleMenuPreference>(Key.clashLoglevel)
 
         /*val onServiceModeChange = Preference.OnPreferenceChangeListener { preference, newValue ->
             val (enabledLocalDns, enabledTransproxy) = when (newValue as String?) {
@@ -55,29 +58,29 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
         val listener: (BaseService.State) -> Unit = {
             if (it == BaseService.State.Stopped) {
-                serviceMode.isEnabled = true
-                portHttpProxy.isEnabled = true
-                portProxy.isEnabled = true
-                portLocalDns.isEnabled = true
-                allowLan.isEnabled = true
-                ipv6Enable.isEnabled = true
-                portApi.isEnabled = true
-                clashLoglevel.isEnabled = true
-                dnsMode.isEnabled = true
+                serviceMode?.isEnabled = true
+                portHttpProxy?.isEnabled = true
+                portProxy?.isEnabled = true
+                portLocalDns?.isEnabled = true
+                allowLan?.isEnabled = true
+                ipv6Enable?.isEnabled = true
+                portApi?.isEnabled = true
+                clashLoglevel?.isEnabled = true
+                dnsMode?.isEnabled = true
             } else {
-                serviceMode.isEnabled = false
-                portHttpProxy.isEnabled = false
-                portProxy.isEnabled = false
-                portLocalDns.isEnabled = false
-                allowLan.isEnabled = false
-                ipv6Enable.isEnabled = false
-                portApi.isEnabled = false
-                clashLoglevel.isEnabled = false
-                dnsMode.isEnabled = false
+                serviceMode?.isEnabled = false
+                portHttpProxy?.isEnabled = false
+                portProxy?.isEnabled = false
+                portLocalDns?.isEnabled = false
+                allowLan?.isEnabled = false
+                ipv6Enable?.isEnabled = false
+                portApi?.isEnabled = false
+                clashLoglevel?.isEnabled = false
+                dnsMode?.isEnabled = false
             }
         }
 
-        portLocalDns.onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
+        portLocalDns?.onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
             override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
                 val dnsJSONobject = JSONObject(DataStore.dnsConfig)
                 dnsJSONobject.put("listen", if (DataStore.allowLan) "0.0.0.0:$newValue" else "127.0.0.1:$newValue")
@@ -86,7 +89,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
             }
         }
 
-        dnsMode.onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
+        dnsMode?.onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
             override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
                 val dnsJSONObject = JSONObject(DataStore.dnsConfig)
                 dnsJSONObject.put("enhanced-mode", newValue)
@@ -95,10 +98,10 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
             }
         }
 
-        ipv6Enable.onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
+        ipv6Enable?.onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
             override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
                 val dnsJSONobject = JSONObject(DataStore.dnsConfig)
-                dnsJSONobject.put("ipv6",newValue)
+                dnsJSONobject.put("ipv6", newValue)
                 DataStore.dnsConfig = dnsJSONobject.toString()
                 return true
             }
@@ -119,12 +122,12 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
     private fun loadDnsPreferenes() {
         val context = preferenceManager.context
 
-        val dnsCustomNameserver = findPreference("dnsCustomNameserver") as PreferenceCategory
-        val dnsCustomFallback = findPreference("dnsCustomFallback") as PreferenceCategory
+        val dnsCustomNameserver = findPreference<PreferenceCategory>("dnsCustomNameserver")
+        val dnsCustomFallback = findPreference<PreferenceCategory>("dnsCustomFallback")
 
 
-        val debug = findPreference("pref_debug")
-        debug.setOnPreferenceClickListener {
+        val debug = findPreference<Preference>("pref_debug")
+        debug?.setOnPreferenceClickListener {
             DataStore.publicStore.remove(Key.dnsConfig)
             ToastUtils.showShort("删除dnsConfig数据库数据")
             LogUtils.w("allow Lan is ${DataStore.allowLan}")
@@ -199,10 +202,10 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
         }
 
 
-        val namserverAdd = findPreference("pref_dns_nameserver_add")
-        val fallbackAdd = findPreference("pref_dns_fallback_add")
+        val namserverAdd = findPreference<Preference>("pref_dns_nameserver_add")
+        val fallbackAdd = findPreference<Preference>("pref_dns_fallback_add")
 
-        namserverAdd.setOnPreferenceClickListener {
+        namserverAdd?.setOnPreferenceClickListener {
             val addDialog = bindEditDialog(
                 title = "add Nameserver DNS", hint = "1.1.1.1 or tls://goole.dns",
                 isMultiline = false, onOk = { it, tag ->
@@ -238,7 +241,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                             )
                             true
                         }
-                        dnsCustomNameserver.addPreference(preference)
+                        dnsCustomNameserver?.addPreference(preference)
 
                         namserverJSONArray.put(it.text.toString())
                         dnsJSON.put("nameserver", namserverJSONArray)
@@ -251,7 +254,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
             addDialog.show(fragmentManager ?: (activity as MainActivity).supportFragmentManager, "addNsDns")
             true
         }
-        fallbackAdd.setOnPreferenceClickListener {
+        fallbackAdd?.setOnPreferenceClickListener {
             val addDialog = bindEditDialog(
                 title = "add Fallback DNS", hint = "1.1.1.1 or tls://goole.dns",
                 isMultiline = false, onOk = { it, tag ->
@@ -286,7 +289,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                             )
                             true
                         }
-                        dnsCustomFallback.addPreference(preference)
+                        dnsCustomFallback?.addPreference(preference)
                         fallbackJSONArray.put(it.text.toString())
                         dnsJSON.put("fallback", fallbackJSONArray)
                         DataStore.dnsConfig = dnsJSON.toString()
@@ -321,7 +324,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun removeDns(
-        preferenceCategory: PreferenceCategory,
+        preferenceCategory: PreferenceCategory?,
         jsonArrayName: String,
         jsonArray: JSONArray,
         value: String,

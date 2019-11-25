@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,7 +50,7 @@ class LogsFragment : ToolbarFragment(), FragmentUtils.OnBackClickListener, Toolb
     lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     lateinit var list: RecyclerView
     val logsViewModel by lazy {
-        ViewModelProviders.of(context as FragmentActivity).get(LogsViewModel::class.java)
+        ViewModelProvider(this).get(LogsViewModel::class.java)
     }
 
     val mAdapter by lazy {

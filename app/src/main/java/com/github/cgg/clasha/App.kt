@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
-import androidx.work.WorkManager
 import com.blankj.utilcode.util.FileIOUtils
 import com.blankj.utilcode.util.LogUtils
 import com.crashlytics.android.Crashlytics
@@ -77,7 +76,7 @@ class App : Application() {
         initClash()
         initLog()
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        WorkManager.initialize(deviceStorage, androidx.work.Configuration.Builder().build())
+
 
         updateNotificationChannels()
     }

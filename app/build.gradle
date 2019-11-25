@@ -126,15 +126,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation fileTree(dir: 'libs', include: ['*.aar'])
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation "androidx.appcompat:appcompat:$androidxVersion"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation "android.arch.work:work-runtime-ktx:$workVersion"
-    implementation "androidx.browser:browser:1.0.0"
-    implementation "androidx.room:room-runtime:$roomVersion"
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+
     kapt "androidx.room:room-compiler:$roomVersion"
     testImplementation "androidx.room:room-testing:$roomVersion"
     testImplementation "junit:junit:$junitVersion"
@@ -142,18 +137,26 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
 
     implementation 'eu.chainfire:libsuperuser:1.0.0.201704021214'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    androidTestImplementation "android.arch.work:work-testing:$workVersion"
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-beta3'
     androidTestImplementation "androidx.test:runner:$androidTestVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidEspressoVersion"
 
 
-    implementation "androidx.core:core-ktx:1.0.1"
-    implementation "androidx.preference:preference:1.0.0"
-    implementation "com.google.android.material:material:1.1.0-alpha02"
-//    implementation "androidx.legacy:legacy-support-v4:$androidxVersion"
-    implementation "com.takisoft.preferencex:preferencex:$preferencexVersion"
-    implementation "com.takisoft.preferencex:preferencex-simplemenu:$preferencexVersion"
+    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha03'
+    implementation 'com.google.android.material:material:1.2.0-alpha01'
+
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03"
+    implementation "androidx.appcompat:appcompat:$androidxVersion"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-rc01'
+    implementation "androidx.work:work-runtime-ktx:$workVersion"
+    implementation 'androidx.browser:browser:1.2.0-alpha08'
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
+
+    implementation 'androidx.preference:preference:1.1.0'
+    implementation "com.takisoft.preferencex:preferencex:1.1.0-alpha05"
+    implementation "com.takisoft.preferencex:preferencex-simplemenu:1.0.0-alpha2"
 
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.25', classifier: 'android'
@@ -167,18 +170,18 @@ dependencies {
     releaseImplementation 'com.github.whataa:pandora-no-op:v1.3.2'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
     implementation 'com.blankj:utilcodex:1.25.9'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation group: 'org.json', name: 'json', version: '20170516'
     // DEBUG END
     //check updateandroidx.fragment:fragment:1.0.0
-    implementation "androidx.fragment:fragment:1.0.0"
+    implementation 'androidx.fragment:fragment:1.2.0-rc02'
 
     implementation 'com.yanzhenjie.andserver:api:2.0.5'
     kapt 'com.yanzhenjie.andserver:processor:2.0.5'
 
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true
     }
 
