@@ -17,8 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.preference.PreferenceDataStore
-import com.avos.avoscloud.*
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.FragmentUtils
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.crashlytics.android.Crashlytics
 import com.github.cgg.clasha.App.Companion.app
 import com.github.cgg.clasha.aidl.ClashAConnection
@@ -28,8 +29,6 @@ import com.github.cgg.clasha.bg.BaseService
 import com.github.cgg.clasha.data.DataStore
 import com.github.cgg.clasha.data.OnPreferenceDataStoreChangeListener
 import com.github.cgg.clasha.utils.Key
-import com.github.cgg.clasha.utils.Key.isONKey
-import com.github.cgg.clasha.widget.EditTextDialog
 import com.github.cgg.clasha.widget.ServiceButton
 import com.google.android.material.navigation.NavigationView
 import com.yanzhenjie.andserver.AndServer
@@ -39,7 +38,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONObject
-import java.lang.Exception
 import java.net.InetAddress
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
@@ -282,7 +280,7 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
                     FragmentUtils.findFragment(supportFragmentManager, ProfileListFragment::class.java)
                 FragmentUtils.replace(supportFragmentManager, findFragment ?: ProfileListFragment(), R.id.fragment)
                 navigation.menu.findItem(R.id.profileConfig).isChecked = true
-            }else{
+            } else {
                 super.onBackPressed()
             }
 
@@ -292,130 +290,8 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
     override fun onStart() {
         super.onStart()
         connection.bandwidthTimeout = 500
-
-        if (needQueryVersion()) {
-            queryCurrentVersionIsOn()
-        }
-
-        if (BuildConfig.closeBeta) {
-            if (!SPUtils.getInstance().contains("firstCheck")) {
-                queryUseUserActive()
-            } else {
-                val isActive = DataStore.publicStore.getBoolean("isActive", false)
-                if (!isActive) {
-                    showActiveCodeInputDialog()
-                }
-            }
-        }
-
     }
 
-    //closeBeta
-    /* active */
-
-
-    //是否应该查询
-    private fun needQueryVersion(): Boolean {
-        val time = DataStore.publicStore.getLong(isONKey + "time", 0)
-        if ((System.currentTimeMillis() - time) > 24 * 60 * 60L) {
-            return true
-        }
-        return false
-    }
-
-    //查询当前版本是否过期
-    private fun queryCurrentVersionIsOn() {
-        var query = AVQuery<AVObject>("settings")
-        query.whereEqualTo("Key", isONKey)
-        query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: MutableList<AVObject>?, avException: AVException?) {
-                avObjects?.takeIf { avObjects.isNotEmpty() }
-                    ?.also {
-                        val avObject = it[0]
-                        val value = avObject.getString("value")
-                        val on = value.toBoolean()
-                        app.mAppExecutors.diskIO.execute {
-                            val flag = DataStore.publicStore.getBoolean(isONKey, true)
-                            DataStore.publicStore.putBoolean(isONKey, on)
-                            //on才更新时间
-                            if (flag) {
-                                DataStore.publicStore.putLong(isONKey + "time", System.currentTimeMillis())
-                            }
-
-                        }
-                        if (!on) {
-                            ToastUtils.showLong("The verson outdated, please update")
-                        }
-                    }
-            }
-        })
-    }
-
-    private fun showActiveCodeInputDialog() {
-        LogUtils.w("showActiveCodeInputDialog")
-        var dialog = EditTextDialog.newInstance(
-            title = "please input active code",
-            isMultiline = false, hasOnNeutral = false
-        )
-        dialog.onOk = { editText, tag ->
-            saveActivetoServer(editText.text.toString())
-        }
-        dialog.isCancelable = false
-        dialog.show(supportFragmentManager, "")
-    }
-
-    private fun queryUseUserActive() {
-        LogUtils.w("queryUseUserActive")
-        var query = AVQuery<AVObject>("UseUser")
-        query.whereEqualTo("AndroidId", DeviceUtils.getAndroidID())
-        query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: MutableList<AVObject>?, avException: AVException?) {
-                SPUtils.getInstance().put("firstCheck", false)
-                if (avObjects == null || avObjects.size <= 0) {
-                    DataStore.publicStore.putBoolean("isActive", false)
-                    showActiveCodeInputDialog()
-                } else {
-                    DataStore.publicStore.putBoolean("isActive", true)
-                }
-            }
-        })
-    }
-
-
-    private fun saveActivetoServer(activeCode: String) {
-        LogUtils.w("saveActivetoServer")
-        if (TextUtils.isEmpty(activeCode)) {
-            ToastUtils.showLong("code 无效")
-            return
-        }
-        var query = AVQuery<AVObject>("UseUser")
-        query.whereEqualTo("useCode", activeCode)
-
-        query.findInBackground(object : FindCallback<AVObject>() {
-            override fun done(avObjects: MutableList<AVObject>?, avException: AVException?) {
-                if (avObjects == null || avObjects.size <= 0) {
-                    DataStore.publicStore.putBoolean("isActive", false)
-                    ToastUtils.showLong("code 无效")
-                } else {
-                    val avObject = avObjects[0]
-                    if (TextUtils.isEmpty(avObject.getString("AndroidId"))) {
-                        DataStore.publicStore.putBoolean("isActive", true)
-                        avObject.put("Model", DeviceUtils.getModel())
-                        avObject.put("Manufacturer", DeviceUtils.getManufacturer())
-                        avObject.put("AndroidId", DeviceUtils.getAndroidID())
-                        avObject.saveInBackground()
-                        ToastUtils.showLong("code 有效")
-                    } else {
-                        ToastUtils.showLong("code used")
-                    }
-
-                }
-            }
-        })
-
-    }
-    /* active */
-    //end closeBeta
 
     override fun onStop() {
         connection.bandwidthTimeout = 0
@@ -425,7 +301,6 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-//        menu?.add(1, 7, 1, "抛出异常")
         return true
     }
 
@@ -444,14 +319,12 @@ class MainActivity : AppCompatActivity(), ClashAConnection.Callback, OnPreferenc
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         DataStore.publicStore.unregisterChangeListener(this)
         connection.disconnect(this)
         stopHttpServer()
     }
-
 
     private fun initHttpServer() {
         app.mAppExecutors.diskIO.execute {

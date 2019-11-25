@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.work.WorkManager
-import com.avos.avoscloud.AVOSCloud
 import com.blankj.utilcode.util.FileIOUtils
 import com.blankj.utilcode.util.LogUtils
 import com.crashlytics.android.Crashlytics
@@ -74,14 +73,6 @@ class App : Application() {
         super.onCreate()
         app = this
         Fabric.with(deviceStorage, Crashlytics())
-
-        //closeBeta
-//        if (BuildConfig.closeBeta) {
-        AVOSCloud.setDebugLogEnabled(true)
-        AVOSCloud.initialize(this, "SlAPxH8o80VD4yMU5cHlhxu7-gzGzoHsz", "VILAayNDQ0qm1JoNEQeTGsGc")
-//        }
-        //end closeBeta
-
 
         initClash()
         initLog()

@@ -9,9 +9,7 @@ import android.util.Log
 import androidx.core.content.getSystemService
 import com.blankj.utilcode.util.LogUtils
 import com.crashlytics.android.Crashlytics
-import com.github.cgg.clasha.App.Companion.TAG
 import com.github.cgg.clasha.App.Companion.app
-import com.github.cgg.clasha.BuildConfig
 import com.github.cgg.clasha.R
 import com.github.cgg.clasha.aidl.IClashAService
 import com.github.cgg.clasha.aidl.IClashAServiceCallback
@@ -19,7 +17,6 @@ import com.github.cgg.clasha.data.DataStore
 import com.github.cgg.clasha.data.LogMessage
 import com.github.cgg.clasha.data.LogsDatabase
 import com.github.cgg.clasha.utils.*
-import com.github.cgg.clasha.utils.Key.isONKey
 import kotlinx.coroutines.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -398,21 +395,6 @@ object BaseService {
 //            val thread = TrafficMonitorThread()
 //            thread.start()
             //data.trafficMonitorThread = thread
-
-            //closeBeta
-            /* active */
-            if (BuildConfig.closeBeta && DataStore.publicStore.getBoolean("isActive") == false) {
-                stopRunner(false, "not active")
-                return Service.START_NOT_STICKY
-            }
-            val flag = DataStore.publicStore.getBoolean(isONKey, true)
-            val time = DataStore.publicStore.getLong(isONKey + "time", 0)
-            if (!flag && ((System.currentTimeMillis() - time) > 24 * 60 * 60)) {//
-                stopRunner(false, "verison outdated")
-                return Service.START_NOT_STICKY
-            }
-            /* active */
-            //end closeBeta
 
             //判断有没有配置文件
             val profile = app.currentProfileConfig
