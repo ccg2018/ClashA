@@ -38,7 +38,6 @@ import com.github.cgg.clasha.data.ProfileConfig
 import com.github.cgg.clasha.utils.*
 import com.github.cgg.clasha.widget.ClashAWebviewBottomSheetDialog
 import com.github.cgg.clasha.widget.EditTextDialog
-import com.loveplusplus.update.UpdateChecker
 import me.rosuh.filepicker.bean.FileItemBeanImpl
 import me.rosuh.filepicker.config.AbstractFileFilter
 import me.rosuh.filepicker.config.AbstractFileType
@@ -193,12 +192,6 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item?.itemId) {
-            R.id.action_check_update -> {
-                UpdateChecker.checkForDialog(
-                    context,
-                    "https://raw.githubusercontent.com/ccg2018/ClashA/master/update/update.json"
-                )
-            }
 
             R.id.action_dashboard -> {
                 when ((activity as MainActivity).state) {

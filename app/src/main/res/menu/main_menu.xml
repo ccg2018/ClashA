@@ -2,13 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:orderInCategory="91"
-            android:title="@string/title_check_update"
-            app:showAsAction="never"
-            android:visible="false"
-            android:id="@+id/action_check_update"/>
-
-    <item
             android:orderInCategory="1"
             android:title="@string/title_dashboard"
             app:showAsAction="always"

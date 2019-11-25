@@ -156,7 +156,7 @@ dependencies {
     implementation "com.takisoft.preferencex:preferencex-simplemenu:$preferencexVersion"
 
 
-    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.24', classifier: 'android'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.25', classifier: 'android'
 
     implementation 'me.rosuh:AndroidFilePicker:0.4.2'
 
@@ -172,7 +172,6 @@ dependencies {
     testImplementation group: 'org.json', name: 'json', version: '20170516'
     // DEBUG END
     //check updateandroidx.fragment:fragment:1.0.0
-    implementation project(':autoupdate')
     implementation "androidx.fragment:fragment:1.0.0"
 
     implementation 'com.yanzhenjie.andserver:api:2.0.5'
