@@ -291,16 +291,18 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                 .build()
             val request = Request.Builder()
                 .addHeader("Connection", "keep-alive")
-                .addHeader("platform", "2")
                 .addHeader("phoneModel", Build.MODEL)
                 .addHeader("systemVersion", Build.VERSION.RELEASE)
                 .url(url).build()
 
-            try {
-                return mClient.newCall(request).execute().body()?.string().toString()
+            return try {
+                mClient.newCall(request).execute().body()?.string().toString()
             } catch (e: Exception) {
+                ToastUtils.showShort(R.string.message_download_config_fail)
+                LogUtils.w(TAG, e)
                 Crashlytics.logException(e)
                 Crashlytics.log(Log.ERROR, TAG, e.localizedMessage)
+                ""
             }
             return ""
         }
@@ -333,7 +335,6 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                     ToastUtils.showShort(R.string.message_download_config_fail)
                     Crashlytics.logException(e)
                     Crashlytics.setString("Download debug result", result)
-                    return
                 }
             }
 
