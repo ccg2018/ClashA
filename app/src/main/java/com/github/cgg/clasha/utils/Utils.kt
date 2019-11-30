@@ -13,14 +13,21 @@ import android.net.Uri
 import android.os.Build
 import android.system.Os
 import android.system.OsConstants
+import android.text.TextUtils
 import android.util.Log
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import com.blankj.utilcode.util.LogUtils
 import com.crashlytics.android.Crashlytics
 import com.github.cgg.clasha.App
+import com.github.cgg.clasha.bg.BaseService
+import com.github.cgg.clasha.data.ConfigManager
 import com.github.cgg.clasha.data.DataStore
 import com.google.gson.*
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,6 +36,7 @@ import java.net.InetAddress
 import java.net.Socket
 import java.net.URLConnection
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 val Throwable.readableMessage get() = localizedMessage ?: javaClass.name
@@ -93,6 +101,103 @@ val Intent.datas get() = listOfNotNull(data) + (clipData?.asIterable()?.mapNotNu
 
 fun printLog(t: Throwable) {
     t.printStackTrace()
+}
+
+fun getSelectProxys() {
+    App.app.mAppExecutors.networkIO.execute {
+        try {
+            val mOkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(400, TimeUnit.MILLISECONDS)
+                .readTimeout(1500, TimeUnit.MILLISECONDS)
+                .build()
+
+            val host = "http://127.0.0.1:${DataStore.portApi}"
+            val request = Request.Builder().url("$host/proxies").get().build()
+            val call = mOkHttpClient.newCall(request)
+            val response = call.execute()
+            if (response.isSuccessful) {
+                val result = response.body()?.string()
+                val resultObj = JSONObject(result).optJSONObject("proxies")
+                var endObj = JSONObject()
+                //遍历
+                val iterator = resultObj.keys().iterator()
+                while (iterator.hasNext()) {
+                    val key = iterator.next()
+                    val iterm = resultObj.get(key) as JSONObject
+                    if (iterm.has("type")) {
+                        val type = iterm.optString("type")
+                        if ("Selector".equals(type)) {
+                            iterm.remove("all")
+                            iterm.remove("history")
+                            endObj.putOpt(key, iterm)
+                        }
+                    }
+                }
+                LogUtils.iTag("proxies", "筛选后的数据 ")
+                LogUtils.json(endObj.toString())
+
+                var profile = App.app.currentProfileConfig
+                profile?.selector = endObj.toString()
+                ConfigManager.updateProfileConfig(profile!!)
+            } else {
+            }
+        } catch (e: Exception) {
+            LogUtils.e(e)
+        }
+    }
+}
+
+fun setSelectorProxy(state: BaseService.State) = when {
+    state == BaseService.State.Connected -> {
+        App.app.mAppExecutors.networkIO.execute {
+            var tries = 0
+            while (true) try {
+                Thread.sleep(50L shl tries)
+
+                val mOkHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(100, TimeUnit.MILLISECONDS)
+                    .writeTimeout(400, TimeUnit.MILLISECONDS)
+                    .build()
+                val host = "http://127.0.0.1:${DataStore.portApi}"
+
+                val profile = App.app.currentProfileConfig
+                if (!TextUtils.isEmpty(profile?.selector)) {
+                    val jsonObj = JSONObject(profile?.selector)
+                    val iterator = jsonObj.keys().iterator()
+                    while (iterator.hasNext()) {
+                        val proxyName = iterator.next()
+                        val iterm = jsonObj.optJSONObject(proxyName)
+                        val nodeName = iterm.optString("now")
+                        val nodeNameJson = JSONObject().putOpt("name", nodeName)
+                        putRequest(mOkHttpClient, host, proxyName, nodeNameJson.toString())
+                    }
+                }
+
+                val request = Request.Builder().url("$host/proxies").get().build()
+                val call = mOkHttpClient.newCall(request)
+                val response = call.execute()
+                if ((response.isSuccessful)) {
+                    LogUtils.d("set selector Proxy successful")
+                    return@execute
+                }
+                LogUtils.i("maybe repeat work")
+            } catch (e: Exception) {
+                LogUtils.e(e)
+                LogUtils.d("set selector Proxy fail, fail count:$tries")
+                if (tries > 5) return@execute
+                tries += 1
+            }
+        }
+    }
+    else -> {
+    }
+}
+
+private inline fun putRequest(client: OkHttpClient, host: String, proxyName: String, nodeNameJSON: String) {
+    val JSON = MediaType.parse("application/json; charset=utf-8")
+    val body = RequestBody.create(JSON, nodeNameJSON)
+    val request = Request.Builder().url("$host/proxies/$proxyName").put(body).build()
+    client.newCall(request).execute()
 }
 
 fun isPortUsing(host: String, port: Int): Boolean {

@@ -146,49 +146,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
         }
     }
 
-    fun getSelectProxys() {
-        app.mAppExecutors.networkIO.execute {
-            try {
-                val mOkHttpClient = OkHttpClient.Builder()
-                    .connectTimeout(400, TimeUnit.MILLISECONDS)
-                    .readTimeout(3, TimeUnit.SECONDS)
-                    .build()
 
-                val host = "http://127.0.0.1:${DataStore.portApi}"
-                val request = Request.Builder().url("$host/proxies").get().build()
-                val call = mOkHttpClient.newCall(request)
-                val response = call.execute()
-                if (response.isSuccessful) {
-                    val result = response.body()?.string()
-                    val resultObj = JSONObject(result).optJSONObject("proxies")
-                    var endObj = JSONObject()
-                    //遍历
-                    val iterator = resultObj.keys().iterator()
-                    while (iterator.hasNext()) {
-                        val key = iterator.next()
-                        val iterm = resultObj.get(key) as JSONObject
-                        if (iterm.has("type")) {
-                            val type = iterm.optString("type")
-                            if ("Selector".equals(type)) {
-                                iterm.remove("all")
-                                iterm.remove("history")
-                                endObj.putOpt(key, iterm)
-                            }
-                        }
-                    }
-                    LogUtils.iTag("proxies", "筛选后的数据 ")
-                    LogUtils.json(endObj.toString())
-
-                    var profile = app.currentProfileConfig
-                    profile?.selector = endObj.toString()
-                    ConfigManager.updateProfileConfig(profile!!)
-                } else {
-                }
-            } catch (e: Exception) {
-                LogUtils.e(e)
-            }
-        }
-    }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item?.itemId) {

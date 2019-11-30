@@ -9,8 +9,11 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.*;
@@ -21,6 +24,9 @@ import androidx.annotation.StringRes;
 import com.blankj.utilcode.util.LogUtils;
 import com.github.cgg.clasha.BuildConfig;
 import com.github.cgg.clasha.R;
+import com.github.cgg.clasha.utils.UtilsKt;
+
+import static com.github.cgg.clasha.App.app;
 
 /**
  * @Author: ccg
@@ -40,6 +46,21 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
     private boolean isCanBack = true;
     private boolean isShowNavBack = true;
     private String port;
+
+
+    private static final int GET_PROXYS_SELECTS = 10001;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            int what = msg.what;
+
+            if (what == GET_PROXYS_SELECTS) {
+                handler.removeMessages(GET_PROXYS_SELECTS);
+            }
+        }
+    };
+
 
     public ClashAWebviewBottomSheetDialog(@NonNull Context context) {
         super(context);
@@ -289,7 +310,23 @@ public class ClashAWebviewBottomSheetDialog extends ClashABottomSheetDialog {
     @Override
     public void show() {
         super.show();
-        mWebview.bindBottomSheetDialog(getContainer());
+        mWebview.bindBottomSheetDialog(getContainer(), new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                getProxysSelects();
+                return false;
+            }
+        });
+    }
+
+    private long time = System.currentTimeMillis();
+
+    private void getProxysSelects() {
+        if (System.currentTimeMillis() - time > 1000 * 3) {
+            time = System.currentTimeMillis();
+            UtilsKt.getSelectProxys();
+        }
     }
 
     @Override

@@ -42,7 +42,7 @@ public class ClashABottomSheetWebview extends WebView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void bindBottomSheetDialog(FrameLayout container) {
+    public void bindBottomSheetDialog(FrameLayout container, final OnTouchListener listener) {
         try {
             bottomCoordinator =
                     (CoordinatorLayout) container.findViewById(R.id.coordinator);
@@ -52,6 +52,10 @@ public class ClashABottomSheetWebview extends WebView {
                     if (bottomCoordinator != null) {
                         bottomCoordinator.requestDisallowInterceptTouchEvent(true);
                     }
+
+                    if (listener != null) {
+                        listener.onTouch(v, event);
+                    }
                     return false;
 
                 }
@@ -60,4 +64,5 @@ public class ClashABottomSheetWebview extends WebView {
             e.printStackTrace();
         }
     }
+
 }
