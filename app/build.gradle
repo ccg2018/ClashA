@@ -40,8 +40,8 @@ android {
         applicationId "com.github.ccg.clasha"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.sdkVersion
-        versionCode 16
-        versionName "0.0.3"
+        versionCode 17
+        versionName "0.0.3.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
