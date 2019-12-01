@@ -17,6 +17,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.TypedValue
 import androidx.annotation.AttrRes
+import androidx.preference.Preference
 import com.blankj.utilcode.util.LogUtils
 import com.crashlytics.android.Crashlytics
 import com.github.cgg.clasha.App
@@ -326,3 +327,5 @@ class JSONArrayAdapter : JsonSerializer<JSONArray>, JsonDeserializer<JSONArray> 
     }
 
 }
+
+fun Preference.remove() = parent!!.removePreference(this)

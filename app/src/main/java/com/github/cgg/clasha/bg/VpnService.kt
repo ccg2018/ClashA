@@ -62,22 +62,6 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
         override fun getLocalizedMessage() = getString(R.string.reboot_required)
     }
 
-    @TargetApi(Build.VERSION_CODES.P)
-    private val defaultNetworkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            underlyingNetwork = network
-        }
-
-        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities?) {
-            // it's a good idea to refresh capabilities
-            underlyingNetwork = network
-        }
-
-        override fun onLost(network: Network) {
-            underlyingNetwork = null
-        }
-    }
-
     private inner class ProtectWorker : ConcurrentLocalSocketListener(
         "ClashVpnThread",
         File(app.deviceStorage.noBackupFilesDir, "protect_path")
@@ -108,12 +92,16 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
     private var conn: ParcelFileDescriptor? = null
     private var worker: ProtectWorker? = null
     private var active = false
+    private var metered = false
     private var underlyingNetwork: Network? = null
         set(value) {
             field = value
             if (active && Build.VERSION.SDK_INT >= 22) setUnderlyingNetworks(underlyingNetworks)
         }
-    private val underlyingNetworks get() = underlyingNetwork?.let { arrayOf(it) }
+    private val underlyingNetworks
+        get() =
+            // clearing underlyingNetworks makes Android 9 consider the network to be metered
+            if (Build.VERSION.SDK_INT == 28 && metered) null else underlyingNetwork?.let { arrayOf(it) }
 
     override fun onBind(intent: Intent) = when (intent.action) {
         SERVICE_INTERFACE -> super<BaseVpnService>.onBind(intent)
@@ -177,8 +165,14 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
         //bypass us
         builder.addDisallowedApplication(packageName)
         builder.addDisallowedApplication("$packageName:bg")
-
         //todo APP bypass
+
+        metered = DataStore.metered
+        active = true
+        if (Build.VERSION.SDK_INT >= 22) {
+            builder.setUnderlyingNetworks(underlyingNetworks)
+            if (Build.VERSION.SDK_INT >= 29) builder.setMetered(metered)
+        }
 
         val conn = builder.establish() ?: throw NullConnectionException()
         this.conn = conn

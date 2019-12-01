@@ -73,8 +73,8 @@ object Key {
     const val portHttpProxy = "portHttpProxy"
     const val portLocalDns = "portLocalDns"
     const val portTransproxy = "portTransproxy"
-
     const val portApi = "portApi"
+    const val metered = "metered"
 
     const val route = "route"
 

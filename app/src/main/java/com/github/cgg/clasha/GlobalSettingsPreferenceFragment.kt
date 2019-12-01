@@ -1,17 +1,20 @@
 package com.github.cgg.clasha
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.widget.EditText
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
+import androidx.preference.SwitchPreference
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.github.cgg.clasha.bg.BaseService
 import com.github.cgg.clasha.data.DataStore
 import com.github.cgg.clasha.utils.Key
 import com.github.cgg.clasha.utils.getGson
+import com.github.cgg.clasha.utils.remove
 import com.github.cgg.clasha.widget.EditTextDialog
 import com.takisoft.preferencex.AutoSummaryEditTextPreference
 import com.takisoft.preferencex.PreferenceFragmentCompat
@@ -46,6 +49,11 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
         val dnsMode = findPreference<SimpleMenuPreference>(Key.dnsMode)
         val clashLoglevel = findPreference<SimpleMenuPreference>(Key.clashLoglevel)
 
+        val serviceModeValue = DataStore.serviceMode
+        val meteredPr = findPreference<SwitchPreference>(Key.metered)
+        meteredPr!!.apply {
+            if (Build.VERSION.SDK_INT >= 28) isEnabled = serviceModeValue == Key.modeVpn else remove()
+        }
         /*val onServiceModeChange = Preference.OnPreferenceChangeListener { preference, newValue ->
             val (enabledLocalDns, enabledTransproxy) = when (newValue as String?) {
                 Key.modeProxy -> Pair(false, false)
@@ -67,6 +75,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 portApi?.isEnabled = true
                 clashLoglevel?.isEnabled = true
                 dnsMode?.isEnabled = true
+                meteredPr?.isEnabled = true
             } else {
                 serviceMode?.isEnabled = false
                 portHttpProxy?.isEnabled = false
@@ -77,6 +86,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 portApi?.isEnabled = false
                 clashLoglevel?.isEnabled = false
                 dnsMode?.isEnabled = false
+                meteredPr?.isEnabled = false
             }
         }
 

@@ -100,7 +100,8 @@
     <string name="dns_custom_fallback">Dns Custom(fallback)</string>
     <string name="allow_lan">Allow Lan</string>
     <string name="ipv6Enable">IPV6 Enable</string>
-
+    <string name="metered">Metered Hint</string>
+    <string name="metered_summary">Hint system to treat VPN as metered</string>
 
     <!-- alert category -->
     <string name="profile_empty">Please select a profile</string>

@@ -77,6 +77,9 @@ object DataStore {
         get() = publicStore.getString(Key.clashLoglevel, Key.clashLogInfo)!!
         set(value) = publicStore.putString(Key.clashLoglevel, value)
 
+    var metered: Boolean
+        get() = publicStore.getBoolean(Key.metered, false)
+        set(value) = publicStore.putBoolean(Key.metered, value)
     var portProxy: Int
         get() = getLocalPort(Key.portProxy, 7891)
         set(value) = publicStore.putString(Key.portProxy, value.toString())

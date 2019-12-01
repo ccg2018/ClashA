@@ -62,8 +62,8 @@ object DefaultNetworkListener {
                 check(listeners.isNotEmpty()) { "Getting network without any listeners is not supported" }
                 if (network == null) pendingRequests += message else message.response.complete(network)
             }
-            is NetworkMessage.Stop -> if (!listeners.isEmpty() && // was not empty
-                    listeners.remove(message.key) != null && listeners.isEmpty()) {
+            is NetworkMessage.Stop -> if (listeners.isNotEmpty() && // was not empty
+                listeners.remove(message.key) != null && listeners.isEmpty()) {
                 network = null
                 unregister()
             }
