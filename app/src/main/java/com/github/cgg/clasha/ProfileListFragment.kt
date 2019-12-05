@@ -135,7 +135,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                     dialog.setCanBack(false)
                     dialog.setShowBackNav(false)
                     dialog.setPort(DataStore.portApi.toString())
-                    dialog.loadUrl("http://clash.razord.top/")
+                    dialog.loadUrl("http://yacd.haishan.me/index.html?port=${DataStore.portApi}#/proxies")
                     dialog.setOnDismissListener(saveInformationCallback)
                     dialog.show()
                     dialog.setMaxHeight(ScreenUtils.getScreenHeight())
@@ -146,7 +146,6 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
             true
         }
     }
-
 
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -160,10 +159,8 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                         dialog.setCanBack(false)
                         dialog.setShowBackNav(false)
                         dialog.setPort(DataStore.portApi.toString())
-                        dialog.loadUrl("http://127.0.0.1:8881/index.html")
-
+                        dialog.loadUrl("http://127.0.0.1:8881/index.html?port=${DataStore.portApi}#/proxies")
                         dialog.setOnDismissListener(saveInformationCallback)
-                        //dialog.loadUrl("http://clash.razord.top/")
                         dialog.show()
                         dialog.setMaxHeight(ScreenUtils.getScreenHeight())
                         dialog.setPeekHeight(ScreenUtils.getScreenHeight())
