@@ -494,7 +494,7 @@ class ProfileListFragment : ToolbarFragment(), Toolbar.OnMenuItemClickListener,
                 }).request()
         } else {
             FilePickerManager.from(this)
-                .maxSelectable(1)
+                .enableSingleChoice()
                 .fileType(object : AbstractFileType() {
                     private val allDefaultFileType: ArrayList<FileType> by lazy {
                         val fileTypes = ArrayList<FileType>()

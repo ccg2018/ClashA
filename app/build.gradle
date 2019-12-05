@@ -161,7 +161,7 @@ dependencies {
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.25', classifier: 'android'
 
-    implementation 'me.rosuh:AndroidFilePicker:0.4.2'
+    implementation 'me.rosuh:AndroidFilePicker:0.6.0'
 
     implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45-androidx"
 
