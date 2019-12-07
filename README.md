@@ -5,9 +5,9 @@
   <br>
 </h1>
 
-<h4 align="center">A Android GUI for Clash.</h4>
+<h4 align="center">An Android GUI for Clash.</h4>
 
-### ClashA will be deprecated soon. For Clash GUI on Android, use **Clash for Android** developed by Kr328, [Telegram Channel](https://t.me/clash_for_android_channel).
+### ClashA will be deprecated soon. For a Clash GUI on Android in active development, use **Clash for Android** developed by Kr328 instead, [Telegram Channel](https://t.me/clash_for_android_channel).
 
 ClashA final version: 0.0.3+
 
