@@ -7,24 +7,24 @@
 
 <h4 align="center">A Android GUI for Clash.</h4>
 
-### ClashA will be stop maintenance. In the furture, A new Clash for Android will be developed by Kr328.
+### ClashA will be deprecated soon. For Clash GUI on Android, use **Clash for Android** developed by Kr328, [Telegram Channel](https://t.me/clash_for_android_channel).
 
 ClashA final version: 0.0.3+
 
-### Keywords
+### Keywords and Useful Links
 - Clash : A multi-platform & rule-base tunnel, [Github](https://github.com/Dreamacro/clash)
 - ClashX for Mac : A GUI of Clash on macOS, [Github](https://github.com/yichengchen/clashX)
 - Clash for Windows :  a GUI of Clash on Windows, [Github](https://raw.githubusercontent.com/Fndroid/clash_for_windows_pkg)
 
 
-### PREREQUISITES
+### Build
+
+#### Build Dependencies
 
 * JDK 1.8
 * Android SDK
   - Android NDK
-
-### BUILD
-
+#### Steps
 * Clone the repo using `git clone --recurse-submodules <repo>` or update submodules using `git submodule update --init --recursive`
 * Build it using Android Studio or gradle script
 
