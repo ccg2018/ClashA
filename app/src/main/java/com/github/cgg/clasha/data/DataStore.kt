@@ -86,9 +86,6 @@ object DataStore {
     var portLocalDns: Int
         get() = getLocalPort(Key.portLocalDns, 5450)
         set(value) = publicStore.putString(Key.portLocalDns, value.toString())
-    var portTransproxy: Int
-        get() = getLocalPort(Key.portTransproxy, 8200)
-        set(value) = publicStore.putString(Key.portTransproxy, value.toString())
     var portHttpProxy: Int
         get() = getLocalPort(Key.portHttpProxy, 7890)
         set(value) = publicStore.putString(Key.portHttpProxy, value.toString())
@@ -109,17 +106,25 @@ object DataStore {
 
     var ipv6Enable: Boolean
         get() = publicStore.getBoolean(Key.ipv6, false)
-        set(value) = publicStore.putBoolean(Key.ipv6, false)
+        set(value) = publicStore.putBoolean(Key.ipv6, value)
+
+    var isBypassPrivateNetwork: Boolean
+        get() = publicStore.getBoolean(Key.KEY_BYPASS_PRIVATE_NETWORK, true)
+        set(value) = publicStore.putBoolean(Key.KEY_BYPASS_PRIVATE_NETWORK, value)
 
 
     /**
      * Initialize settings that have complicated default values.
      */
     fun initGlobal() {
+        if (publicStore.getBoolean("BypassPrivateNetworkInit", true)) {
+            publicStore.putBoolean("BypassPrivateNetworkInit", false)
+            isBypassPrivateNetwork = true
+        }
         if (publicStore.getString(Key.portProxy) == null) portProxy = portProxy
         if (publicStore.getString(Key.portLocalDns) == null) portLocalDns = portLocalDns
-        if (publicStore.getString(Key.portTransproxy) == null) portTransproxy = portTransproxy
         if (publicStore.getString(Key.portApi) == null) portApi = portApi
+        if (publicStore.getString(Key.portHttpProxy) == null) portHttpProxy = portHttpProxy
         if (publicStore.getString(Key.dnsConfig) == null) dnsConfig = dnsConfig
     }
 

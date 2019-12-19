@@ -20,7 +20,6 @@ import com.takisoft.preferencex.AutoSummaryEditTextPreference
 import com.takisoft.preferencex.PreferenceFragmentCompat
 import com.takisoft.preferencex.SimpleMenuPreference
 import com.takisoft.preferencex.SwitchPreferenceCompat
-import kotlinx.android.synthetic.main.layout_main.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -39,8 +38,15 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
         addPreferencesFromResource(R.xml.pref_global)
 
 
-        val allowLan = findPreference<SwitchPreferenceCompat>(Key.allowLan)
-        val ipv6Enable = findPreference<SwitchPreferenceCompat>(Key.ipv6)
+        val allowLan = findPreference<SwitchPreferenceCompat>(Key.allowLan)?.apply {
+            this.isEnabled = DataStore.allowLan
+        }
+        val ipv6Enable = findPreference<SwitchPreferenceCompat>(Key.ipv6)?.apply {
+            this.isEnabled = DataStore.ipv6Enable
+        }
+        val bypassPrivateNetwork = findPreference<SwitchPreferenceCompat>(Key.KEY_BYPASS_PRIVATE_NETWORK)?.apply {
+            this.isEnabled = DataStore.isBypassPrivateNetwork
+        }
         val portApi = findPreference<AutoSummaryEditTextPreference>(Key.portApi)
         val serviceMode = findPreference<SimpleMenuPreference>(Key.serviceMode)
         val portHttpProxy = findPreference<AutoSummaryEditTextPreference>(Key.portHttpProxy)
@@ -50,10 +56,10 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
         val clashLoglevel = findPreference<SimpleMenuPreference>(Key.clashLoglevel)
 
         val serviceModeValue = DataStore.serviceMode
-        val meteredPr = findPreference<SwitchPreference>(Key.metered)
-        meteredPr!!.apply {
+        val meteredPr = findPreference<SwitchPreference>(Key.metered)?.apply {
             if (Build.VERSION.SDK_INT >= 28) isEnabled = serviceModeValue == Key.modeVpn else remove()
         }
+
         /*val onServiceModeChange = Preference.OnPreferenceChangeListener { preference, newValue ->
             val (enabledLocalDns, enabledTransproxy) = when (newValue as String?) {
                 Key.modeProxy -> Pair(false, false)
@@ -76,6 +82,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 clashLoglevel?.isEnabled = true
                 dnsMode?.isEnabled = true
                 meteredPr?.isEnabled = true
+                bypassPrivateNetwork?.isEnabled = true
             } else {
                 serviceMode?.isEnabled = false
                 portHttpProxy?.isEnabled = false
@@ -87,6 +94,7 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 clashLoglevel?.isEnabled = false
                 dnsMode?.isEnabled = false
                 meteredPr?.isEnabled = false
+                bypassPrivateNetwork?.isEnabled = false
             }
         }
 
@@ -115,7 +123,6 @@ class GlobalSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 DataStore.dnsConfig = dnsJSONobject.toString()
                 return true
             }
-
         }
 
         listener((activity as MainActivity).state)

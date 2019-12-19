@@ -25,6 +25,12 @@
             android:key="ipv6Enable"
             android:title="@string/ipv6Enable"/>
 
+
+    <SwitchPreferenceCompat
+            android:key="key_vpn_setting_bypass_private_network"
+            android:summary="@string/proxy_setting_vpn_setting_bypass_private_network_summary"
+            android:title="@string/bypass_private_network"/>
+
     <SimpleMenuPreference
             android:key="serviceMode"
             android:entries="@array/service_modes"
@@ -57,6 +63,7 @@
             app:pref_summaryHasText="%s"
             android:singleLine="true"
             android:title="@string/api_port"/>
+
     <AutoSummaryEditTextPreference
             android:key="portHttpProxy"
             android:inputType="number"
@@ -64,6 +71,7 @@
             app:pref_summaryHasText="%s"
             android:singleLine="true"
             android:title="@string/http_port_proxy"/>
+
     <AutoSummaryEditTextPreference
             android:key="portProxy"
             android:inputType="number"

@@ -100,6 +100,9 @@
     <string name="dns_custom_fallback">Dns Custom(fallback)</string>
     <string name="allow_lan">Allow Lan</string>
     <string name="ipv6Enable">IPV6 Enable</string>
+    <string name="bypass_private_network">Bypass Private Network</string>
+    <string name="proxy_setting_vpn_setting_bypass_private_network_summary">Bypass private network subnet</string>
+
     <string name="metered">Metered Hint</string>
     <string name="metered_summary">Hint system to treat VPN as metered</string>
 

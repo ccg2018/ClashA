@@ -50,15 +50,9 @@ object Key {
 
     const val clashMode = "clashMode"
     const val clashModeRule = "Rule"
-    const val clashModeGlobal = "Global"
-    const val clashModeDirect = "Direct"
 
     const val clashLoglevel = "clashLoglevel"
     const val clashLogInfo = "info"
-    const val clashLogWarning = "warning"
-    const val clashLogError = "error"
-    const val clashLogDebug = "debug"
-    const val clashLogSilent = "v"
 
     const val dnsMode = "dnsMode"
     const val modeRedirhost = "redir-host"
@@ -75,6 +69,7 @@ object Key {
     const val portTransproxy = "portTransproxy"
     const val portApi = "portApi"
     const val metered = "metered"
+    const val KEY_BYPASS_PRIVATE_NETWORK = "key_vpn_setting_bypass_private_network"
 
     const val route = "route"
 

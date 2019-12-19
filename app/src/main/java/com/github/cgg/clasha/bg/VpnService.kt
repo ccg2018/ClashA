@@ -43,7 +43,7 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
     companion object {
         private const val VPN_MTU = 1500
         private const val PRIVATE_VLAN4_CLIENT = "172.19.0.1"
-        private const val PRIVATE_VLAN4_ROUTER = "172.19.0.2"
+        private const val PRIVATE_VLAN4_ROUTER = "172.19.0.2"//DNS
         private const val PRIVATE_VLAN6_CLIENT = "fdfe:dcba:9876::1"
         private const val PRIVATE_VLAN6_ROUTER = "fdfe:dcba:9876::2"
 
@@ -149,23 +149,18 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
 
     private suspend fun startVpn(): FileDescriptor {
         val builder = Builder()
+            .addAddress()
             .setConfigureIntent(MainActivity.pendingIntent(this))
-            .setSession(BaseService.tempformattedName)
             .setMtu(VPN_MTU)
-            .addAddress(PRIVATE_VLAN4_CLIENT, 30)
-            .addRoute("0.0.0.0", 0)
+            .setBlocking(false)
+            .addBypassApplications()
+            .addBypassPrivateRoute()
             .addDnsServer(PRIVATE_VLAN4_ROUTER)
 
         if (DataStore.ipv6Enable) {
             builder.addAddress(PRIVATE_VLAN6_CLIENT, 126)
             builder.addRoute("::", 0)
         }
-
-
-        //bypass us
-        builder.addDisallowedApplication(packageName)
-        builder.addDisallowedApplication("$packageName:bg")
-        //todo APP bypass
 
         metered = DataStore.metered
         active = true
@@ -227,4 +222,39 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
         data.binder.close()
     }
 
+    private fun Builder.addBypassPrivateRoute(): Builder {
+        // IPv4
+        if (DataStore.isBypassPrivateNetwork) {
+            resources.getStringArray(R.array.bypass_private_route).forEach {
+                val address = it.split("/")
+                addRoute(address[0], address[1].toInt())
+            }
+        } else {
+            addRoute("0.0.0.0", 0)
+        }
+
+        // IPv6
+        if (DataStore.ipv6Enable) {
+            addRoute("::", 0)
+        }
+
+        return this
+    }
+
+    private fun Builder.addAddress(): Builder {
+        addAddress(PRIVATE_VLAN4_CLIENT, 30)
+        if (DataStore.ipv6Enable) {
+            addAddress(PRIVATE_VLAN6_CLIENT, 126)
+        }
+
+        return this
+    }
+    private fun Builder.addBypassApplications(): Builder {
+        for ( app in resources.getStringArray(R.array.default_disallow_application) ) {
+            runCatching {
+                addDisallowedApplication(app)
+            }
+        }
+        return this
+    }
 }
