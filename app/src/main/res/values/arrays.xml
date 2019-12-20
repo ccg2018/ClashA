@@ -116,6 +116,6 @@
     com.github.cgg.clasha
 
     <string-array name="default_disallow_application">
-        <item>com.github.cgg.clasha</item>
+        <item>com.github.ccg.clasha</item>
     </string-array>
 </resources>

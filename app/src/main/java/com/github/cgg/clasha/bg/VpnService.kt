@@ -1,17 +1,18 @@
 package com.github.cgg.clasha.bg
 
-import android.annotation.TargetApi
 import android.app.Service
 import android.content.Intent
-import android.net.*
+import android.net.LocalSocket
+import android.net.LocalSocketAddress
+import android.net.Network
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.system.ErrnoException
 import android.system.Os
 import com.blankj.utilcode.util.LogUtils
+import com.crashlytics.android.Crashlytics
 import com.github.ccg.clasha.net.DefaultNetworkListener
 import com.github.cgg.clasha.App.Companion.app
-import com.github.cgg.clasha.JniHelper
 import com.github.cgg.clasha.MainActivity
 import com.github.cgg.clasha.R
 import com.github.cgg.clasha.VpnRequestActivity
@@ -28,7 +29,6 @@ import java.io.FileDescriptor
 import java.io.IOException
 import java.lang.reflect.Method
 import java.net.URL
-import java.util.*
 import android.net.VpnService as BaseVpnService
 
 /**
@@ -223,34 +223,42 @@ class VpnService : BaseVpnService(), LocalDnsService.Interface {
     }
 
     private fun Builder.addBypassPrivateRoute(): Builder {
-        // IPv4
-        if (DataStore.isBypassPrivateNetwork) {
-            resources.getStringArray(R.array.bypass_private_route).forEach {
-                val address = it.split("/")
-                addRoute(address[0], address[1].toInt())
+        runCatching {
+            // IPv4
+            if (DataStore.isBypassPrivateNetwork) {
+                resources.getStringArray(R.array.bypass_private_route).forEach {
+                    val address = it.split("/")
+                    addRoute(address[0], address[1].toInt())
+                }
+            } else {
+                addRoute("0.0.0.0", 0)
             }
-        } else {
-            addRoute("0.0.0.0", 0)
-        }
 
-        // IPv6
-        if (DataStore.ipv6Enable) {
-            addRoute("::", 0)
+            // IPv6
+            if (DataStore.ipv6Enable) {
+                addRoute("::", 0)
+            }
+        }.onFailure {
+            Crashlytics.logException(it)
         }
 
         return this
     }
 
     private fun Builder.addAddress(): Builder {
-        addAddress(PRIVATE_VLAN4_CLIENT, 30)
-        if (DataStore.ipv6Enable) {
-            addAddress(PRIVATE_VLAN6_CLIENT, 126)
+        runCatching {
+            addAddress(PRIVATE_VLAN4_CLIENT, 30)
+            if (DataStore.ipv6Enable) {
+                addAddress(PRIVATE_VLAN6_CLIENT, 126)
+            }
+        }.onFailure {
+            Crashlytics.logException(it)
         }
-
         return this
     }
+
     private fun Builder.addBypassApplications(): Builder {
-        for ( app in resources.getStringArray(R.array.default_disallow_application) ) {
+        for (app in resources.getStringArray(R.array.default_disallow_application)) {
             runCatching {
                 addDisallowedApplication(app)
             }
